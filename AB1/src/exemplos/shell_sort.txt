@@ -8,7 +8,7 @@ void shellSort(int vet[], int size){
     }
 
     while (gap > 0) {
-        for i in (gap, size) step 1 {
+        for (i, gap, size, 1) {
             value = vet[i];
             j = i;
             while (j > gap-1 and value <= vet[j - gap]) {

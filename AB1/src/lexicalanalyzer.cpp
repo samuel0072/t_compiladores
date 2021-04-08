@@ -386,12 +386,6 @@ Category LexicalAnalyzer::reserved_word(std::string word) {
     if(word.compare("for")== 0) {
         cat = Category::LoopFor;
     }
-    if(word.compare("in")== 0) {
-        cat = Category::In;
-    }
-    if(word.compare("step")== 0) {
-        cat = Category::Step;
-    }
     if(word.compare("break")== 0) {
         cat = Category::Break;
     }
@@ -601,10 +595,6 @@ char* LexicalAnalyzer::get_cat_name(Category c) {
             return (char*) "LoopWhile";
         case Category::LoopFor:
             return (char*) "LoopFor";
-        case Category::In:
-            return (char*) "In";
-        case Category::Step:
-            return (char*) "Step";
         case Category::Break:
             return (char*) "Break";
         case Category::Return:

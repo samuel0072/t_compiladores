@@ -1,4 +1,4 @@
-func int init(){
-    print "Alô mundo";
+int main(){
+    output("%s", "Alô mundo");
     return 0;
 }
