@@ -8,7 +8,5 @@ OpLEqual, OpEqual, OpDiff, OpBinXor,OpNot, OpAnd, OpOr, Assign, Comma,
 Terminator, Error, Id, CteInt, CteFloat, CteChar, CteString, CteBool, Eof };
 
 enum  State_types {
-   Init = 1, Inter, End
+   Init = 1, Inter, End, State_Error, Caracter
 };
-
-char* categ_name(Category);
