@@ -11,12 +11,17 @@ struct State {
 
 LexicalAnalyzer::LexicalAnalyzer(std::string file){
     //Construtor
-    program_file.open(file);
-    line.clear();
     current = 0;
     line_number = 1;
+
+    line.clear();
+    program_file.open(file);
     init_state_0();
 
+    if(!program_file.is_open()) {
+        std::cout << "Erro ao abrir o arquivo";
+        exit(EXIT_FAILURE);
+    }
     
 }
 
@@ -444,11 +449,6 @@ Token* LexicalAnalyzer::nextToken() {
         return tk;
     }
 
-    if(!program_file.is_open()) {
-        tk->cat = Category::Error;
-        tk->lex.append("Erro ao abrir o arquivo");
-        return tk;
-    }
 
     if(line.length() == 0) {
         getline(program_file, line);
