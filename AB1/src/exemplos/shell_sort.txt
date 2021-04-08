@@ -29,14 +29,14 @@ int main(){
 
     int vet[tam];
 
-    for i in (0, tam-1) step 1{
+    for (i, 0, tam-1, 1){
         input(vet[i]);
         output("%d ", vet[i]);
     }
 
     shellSort(vet, tam);
 
-     for i in (0, tam-1) step 1{
+    for (i, 0, tam-1, 1){
         output("%d ", vet[i]);
     }
 }
