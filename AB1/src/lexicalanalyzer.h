@@ -31,6 +31,8 @@ class LexicalAnalyzer {
         int current; //posição na linha
         int line_number;//número da linha
         State* state_0;
+        State* actual_state;
+
 
         /*Funções e procedimentos*/
         std::string get_lex(Category c);

@@ -12,11 +12,13 @@ struct State {
 LexicalAnalyzer::LexicalAnalyzer(std::string file){
     //Construtor
     current = 0;
-    line_number = 1;
+    line_number = 0;
 
     line.clear();
     program_file.open(file);
     init_state_0();
+
+    actual_state = state_0;
 
     if(!program_file.is_open()) {
         std::cout << "Erro ao abrir o arquivo";
@@ -121,7 +123,7 @@ State* LexicalAnalyzer::op_div_state() {
     State *comment_end = new State;
 
     op_div->actual = "";
-    op_div->next = "[\\*]";
+    op_div->next = "[\\*|/]";
     op_div->state_type = State_types::End;
     op_div->next_state = comment_init;
     op_div->cat = Category::OpDiv;
@@ -435,7 +437,7 @@ void LexicalAnalyzer::dealoc_state(State* state) {
 Token* LexicalAnalyzer::nextToken() {
 
     Token* tk = new Token;
-    State* actual_state = state_0;
+    
     int CLEAR_LINE = 0;
     
     if(program_file.eof() && line.compare("") != 0) {
@@ -451,7 +453,14 @@ Token* LexicalAnalyzer::nextToken() {
 
 
     if(line.length() == 0) {
+        if(line.compare("\n") == 0) {
+            //Ele leu uma linha vazia
+            line_number++;
+            print_line();
+        }
+        //Aqui é pra ler a primeira linha do programa
         getline(program_file, line);
+        line_number++;
         print_line();
         
     }
@@ -466,112 +475,112 @@ Token* LexicalAnalyzer::nextToken() {
     tk->col = current;
     tk->line = line_number;
 
-    do {
+    while(current < line_len) {
+        std::string char_act(1, line[current]);
+        lex.append(char_act);
         
-        while(current < line_len) {
-            std::string char_act(1, line[current]);
-            lex.append(char_act);
-            
+        if(actual_state->state_type == State_types::Inter
+        && std::regex_search(lex, std::regex("//"))) {
+            //Vai para a próxima linha do arquivo fonte
+            actual_state = state_0;
+            current = line_len + 1;
+            break;
 
-            if( std::regex_match(char_act, std::regex(actual_state->actual)) ) {
-                //continua no mesmo estado
-            }
-            else if( std::regex_match( char_act, std::regex(actual_state->next) ) ) {
-                //muda de estado
-                actual_state = actual_state->next_state;   
-            }
-            else if( actual_state->state_type == State_types::Init ) {
-                
-                //Verifica se está no estado inicial
-                actual_state = get_next_state(line[current]);
-                lex = char_act;
-                
-                //Verifica se fez uma transição válida
-                tk->col = current+1;//comecou a formar o token;
-                if(actual_state->state_type == State_types::State_Error) {
-                    tk->lex.append(lex);
-                    tk->cat = Category::Error;
-                    break;
-                }
-            }
-            else if( actual_state->state_type == State_types::End ) {
-                //Verifica se está em um estado final
-                //cout << " ->Saiu do estado final\n";
-                tk->cat = actual_state->cat;
-                tk->lex.clear();
-                
-                if(actual_state->cat == Category::CteFloat||
-                actual_state->cat == Category::CteInt||
-                actual_state->cat == Category::CteString||
-                actual_state->cat == Category::CteChar) {
-                    lex.pop_back();
-                    tk->lex.append(lex);
-                }
-                else if(actual_state->cat == Category::Id) {
-                    lex.pop_back();
-                    tk->cat = reserved_word(lex);
-                    tk->lex.append(lex);
-                }
-                else {
-                    tk->lex.append(get_lex(tk->cat));//Obtem o lexema da categoria
-                }
-                break;
-            }
-            else if(actual_state->state_type == State_types::Caracter) {
-                actual_state = char_state(line[current]);
-            }
-            else if(actual_state->state_type == State_types::Inter) {
-                tk->cat = Category::Error;
-                tk->lex.append(char_act);
-                break;
-            }
-            current++;
         }
-    
-        //Esse if é pra reconhecer o ultimo caractere da linha
-        if( actual_state->state_type == State_types::End ) {
-                //Verifica se está em um estado final
-                //cout << " ->Saiu do estado final\n";
-                tk->cat = actual_state->cat;
-                tk->lex.clear();
-                if(actual_state->cat == Category::CteFloat||
-                actual_state->cat == Category::CteInt||
-                actual_state->cat == Category::CteString||
-                actual_state->cat == Category::CteChar) {
-                    tk->lex.append(lex);
-                }
-                else if(actual_state->cat == Category::Id) {
-                    tk->cat = reserved_word(lex);
-                    tk->lex.append(lex);
-                }
-                else {
-                    tk->lex.append(get_lex(tk->cat));//Obtem o lexema da categoria
-                }
+        if( std::regex_match(char_act, std::regex(actual_state->actual)) ) {
+            //continua no mesmo estado
+        }
+        else if( std::regex_match( char_act, std::regex(actual_state->next) ) ) {
+            //muda de estado
+            actual_state = actual_state->next_state;   
+        }
+        else if( actual_state->state_type == State_types::Init ) {
+            
+            //Verifica se está no estado inicial
+            actual_state = get_next_state(line[current]);
+            lex = char_act;
+            
+            //Verifica se fez uma transição válida
+            tk->col = current+1;//comecou a formar o token;
+            if(actual_state->state_type == State_types::State_Error) {
+                tk->lex.append(lex);
+                tk->cat = Category::Error;
+                break;
             }
-        
-        
-        if(CLEAR_LINE == 1) {
-            line = "";
+        }
+        else if( actual_state->state_type == State_types::End ) {
+            //Verifica se está em um estado final
+            //cout << " ->Saiu do estado final\n";
+            tk->cat = actual_state->cat;
+            tk->lex.clear();
+            
+            if(actual_state->cat == Category::CteFloat||
+            actual_state->cat == Category::CteInt||
+            actual_state->cat == Category::CteString||
+            actual_state->cat == Category::CteChar) {
+                lex.pop_back();
+                tk->lex.append(lex);
+            }
+            else if(actual_state->cat == Category::Id) {
+                lex.pop_back();
+                tk->cat = reserved_word(lex);
+                tk->lex.append(lex);
+            }
+            else {
+                tk->lex.append(get_lex(tk->cat));//Obtem o lexema da categoria
+            }
             break;
         }
-        
-        else if(current >= line_len) {
-            //Lê a próxima linha
-            getline(program_file, line);
-            current = 0;
-            line_number++;
+        else if(actual_state->state_type == State_types::Caracter) {
+            actual_state = char_state(line[current]);
         }
-        if(actual_state->state_type == State_types::Inter 
-        || actual_state->state_type == State_types::Init) {
-            tk->line = line_number;
-            line_len = line.length();
-            print_line();
+        else {
+            //O lexema não foi reconhecido
+            tk->cat = Category::Error;
+            tk->lex.append(char_act);
+            break;
         }
+        current++;
+    }
+
+    //Esse if é pra reconhecer o ultimo caractere da linha
+    if( actual_state->state_type == State_types::End ) {
+            //Verifica se está em um estado final
+            //cout << " ->Saiu do estado final\n";
+            tk->cat = actual_state->cat;
+            tk->lex.clear();
+            if(actual_state->cat == Category::CteFloat||
+            actual_state->cat == Category::CteInt||
+            actual_state->cat == Category::CteString||
+            actual_state->cat == Category::CteChar) {
+                tk->lex.append(lex);
+            }
+            else if(actual_state->cat == Category::Id) {
+                tk->cat = reserved_word(lex);
+                tk->lex.append(lex);
+            }
+            else {
+                tk->lex.append(get_lex(tk->cat));//Obtem o lexema da categoria
+            }
+        }
+
+    if(current >= line_len) {
+        //Lê a próxima linha
+        getline(program_file, line);
+        current = 0;
+        line_number++;
+    }
+    if(CLEAR_LINE == 1) {
+        line = "";
+    }
+    if(actual_state->state_type == State_types::Inter 
+    || actual_state->state_type == State_types::Init) {
+        //Esse if é executado quando se está lendo um comentário com mais de uma linha
         
-    }while(actual_state->state_type == State_types::Inter 
-    || actual_state->state_type == State_types::Init);
-    //Esse do while é usado caso um comentário com mais de uma linha seja alcançado.
-    
+        tk = nextToken();
+    }
+
+    actual_state = state_0;//Ocorreu o reconhecimento de um token
 
     return tk;
 }

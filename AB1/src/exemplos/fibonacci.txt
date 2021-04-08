@@ -1,9 +1,6 @@
-/*Isso é um comentário
-de várias linhas
-*/
-int fibonacci(int valor_limite){
+
+int fibonacci(int valor_limite){//comentario
     int a, b, aux;
-    /*Isso tbm é um comentário*/
 
     if(valor_limite >= 0){
 
@@ -11,7 +8,9 @@ int fibonacci(int valor_limite){
 
         a = 0;
         b = 1;
-        aux = a + b;
+        aux = a + b;/*
+        Comentario
+        */
 
         while(aux <= limite){
             output(", %d", aux);

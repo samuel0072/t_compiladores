@@ -12,7 +12,7 @@ int main(int argc, char * argv[]) {
     LexicalAnalyzer lex(file);
     Token *tk;
 
-    while(tk->cat != Category::Eof) {
+    while(tk->cat != Category::Eof && tk->cat != Category::Error) {
         tk = lex.nextToken();
         std::string tk_format = "          [" + std::to_string(tk->line)
                                 +", " + std::to_string(tk->col) + "] ("

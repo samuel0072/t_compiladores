@@ -25,7 +25,7 @@ int main(){
 
     int i, tam;
 
-    input tam;
+    input(tam);
 
     int vet[tam];
 
