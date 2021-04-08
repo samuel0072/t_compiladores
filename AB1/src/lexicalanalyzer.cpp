@@ -3,7 +3,7 @@
 struct State {
     Category cat;
     std::string actual;//expressao regular para continuar no estado atual
-    std::string next;//expressaoregular para ir pro proximo estado
+    std::string next;//expressao regular para ir pro proximo estado
     State_types state_type;
     State* next_state;
 };
@@ -13,6 +13,7 @@ LexicalAnalyzer::LexicalAnalyzer(std::string file){
     //Construtor
     current = 0;
     line_number = 0;
+    line_len = 0;
 
     line.clear();
     program_file.open(file);
@@ -433,42 +434,28 @@ Token* LexicalAnalyzer::nextToken() {
     Token* tk = new Token;
     
     int CLEAR_LINE = 0;
-    
-    if(program_file.eof() && line.compare("") != 0) {
-        //Verifica se está na última linha (antes do eof)
-        CLEAR_LINE = 1;
-    }
-    else if(program_file.eof()) {
+
+    if(program_file.eof() && current >= line_len) {
         tk->cat = Category::Eof;
         tk->col = 0;
         tk->line = line_number;
         return tk;
     }
-
-
-    if(line.length() == 0) {
-        if(line.compare("\n") == 0) {
-            //Ele leu uma linha vazia
-            line_number++;
-            print_line();
-        }
-        //Aqui é pra ler a primeira linha do programa
+    if(current >= line_len) {
+        //Lê a próxima linha
         getline(program_file, line);
+        current = 0;
         line_number++;
-        print_line();
-        
-    }
-    else if(current == 0) {
         print_line();
     }
     
-    int line_len = line.length();
+    line_len = line.length();
     std::string lex = "";
 
 
     tk->col = current;
     tk->line = line_number;
-
+        
     while(current < line_len) {
         std::string char_act(1, line[current]);
         lex.append(char_act);
@@ -481,6 +468,7 @@ Token* LexicalAnalyzer::nextToken() {
             break;
 
         }
+        
         if( std::regex_match(char_act, std::regex(actual_state->actual)) ) {
             //continua no mesmo estado
         }
@@ -558,15 +546,6 @@ Token* LexicalAnalyzer::nextToken() {
             }
         }
 
-    if(current >= line_len) {
-        //Lê a próxima linha
-        getline(program_file, line);
-        current = 0;
-        line_number++;
-    }
-    if(CLEAR_LINE == 1) {
-        line = "";
-    }
     if(actual_state->state_type == State_types::Inter 
     || actual_state->state_type == State_types::Init) {
         //Esse if é executado quando se está lendo um comentário com mais de uma linha

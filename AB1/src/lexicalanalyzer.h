@@ -25,11 +25,11 @@ class LexicalAnalyzer {
     private:
         
         /* Váriaveis */
-        Token *tk;
         std::ifstream program_file;
         std::string line;//linha atual sendo linda de program_file
         int current; //posição na linha
         int line_number;//número da linha
+        int line_len;//Comprimento da linha
         State* state_0;
         State* actual_state;
 
