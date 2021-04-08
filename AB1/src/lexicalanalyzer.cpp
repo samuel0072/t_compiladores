@@ -433,33 +433,48 @@ Token* LexicalAnalyzer::nextToken() {
 
     Token* tk = new Token;
     
-    int CLEAR_LINE = 0;
+    
 
     if(program_file.eof() && current >= line_len) {
+        //Se tiver tratado a linha anterior e só resta eof 
         tk->cat = Category::Eof;
-        tk->col = 0;
+        tk->col = current;
         tk->line = line_number;
         return tk;
     }
+    
     if(current >= line_len) {
-        //Lê a próxima linha
+        //Lê a próxima linha se tiver tratado a linha anterior ou se for a primeira linha do arquivo
         getline(program_file, line);
         current = 0;
         line_number++;
         print_line();
+        //Lendo linhas vazias
+        while(line.length() == 0 && !program_file.eof()) {
+            getline(program_file, line);
+            current = 0;
+            line_number++;
+            print_line();
+        }
+        line_len = line.length();
+        line[line_len] = '\n';//a função getline retira o \n do final da linha
+        
     }
-    
-    line_len = line.length();
-    std::string lex = "";
-
-
     tk->col = current;
     tk->line = line_number;
+    
+    if(actual_state->state_type == State_types::Init) {
+        //trata os espaços em branco no começo das linhas
+        while(line[current] == ' '){
+            current++;
+        }
+    }
+
+    while(current <= line_len) {
         
-    while(current < line_len) {
         std::string char_act(1, line[current]);
         lex.append(char_act);
-        
+
         if(actual_state->state_type == State_types::Inter
         && std::regex_search(lex, std::regex("//"))) {
             //Vai para a próxima linha do arquivo fonte
@@ -517,34 +532,13 @@ Token* LexicalAnalyzer::nextToken() {
             actual_state = char_state(line[current]);
         }
         else {
-            //O lexema não foi reconhecido
             tk->cat = Category::Error;
-            tk->lex.append(char_act);
+            tk->lex.append(lex);
+            actual_state->state_type = State_types::State_Error;
             break;
         }
         current++;
     }
-
-    //Esse if é pra reconhecer o ultimo caractere da linha
-    if( actual_state->state_type == State_types::End ) {
-            //Verifica se está em um estado final
-            //cout << " ->Saiu do estado final\n";
-            tk->cat = actual_state->cat;
-            tk->lex.clear();
-            if(actual_state->cat == Category::CteFloat||
-            actual_state->cat == Category::CteInt||
-            actual_state->cat == Category::CteString||
-            actual_state->cat == Category::CteChar) {
-                tk->lex.append(lex);
-            }
-            else if(actual_state->cat == Category::Id) {
-                tk->cat = reserved_word(lex);
-                tk->lex.append(lex);
-            }
-            else {
-                tk->lex.append(get_lex(tk->cat));//Obtem o lexema da categoria
-            }
-        }
 
     if(actual_state->state_type == State_types::Inter 
     || actual_state->state_type == State_types::Init) {
@@ -552,14 +546,14 @@ Token* LexicalAnalyzer::nextToken() {
         
         tk = nextToken();
     }
-
     actual_state = state_0;//Ocorreu o reconhecimento de um token
 
     return tk;
 }
 
 void LexicalAnalyzer::print_line() {
-    std::cout << std::to_string(line_number) + "  "+line + "\n";
+    printf("%4d  %s\n", line_number, line.c_str());
+    //std::cout << std::to_string(line_number) + "  "+line + "\n";
 }
 
 char* LexicalAnalyzer::get_cat_name(Category c) {

@@ -30,6 +30,7 @@ class LexicalAnalyzer {
         int current; //posição na linha
         int line_number;//número da linha
         int line_len;//Comprimento da linha
+        std::string lex;
         State* state_0;
         State* actual_state;
 
