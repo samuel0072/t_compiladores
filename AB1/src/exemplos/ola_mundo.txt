@@ -1,4 +1,0 @@
-int main(){
-    output("%s", "Alô mundo");
-    return 0;
-}

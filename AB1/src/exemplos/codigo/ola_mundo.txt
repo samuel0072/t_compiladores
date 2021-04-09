@@ -1,0 +1,4 @@
+int main(){
+    output("%s", '\"');
+    return 0;
+} a= b;
