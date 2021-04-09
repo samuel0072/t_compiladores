@@ -136,7 +136,7 @@ State* LexicalAnalyzer::op_div_state() {
 
     comment_end->actual = "\\*";
     comment_end->next = "";
-    comment_end->state_type = State_types::Comment_end;
+    comment_end->state_type = State_types::Comment_End;
     comment_end->next_state = comment_init;//Isso aqui é só pra evitar de criar um estado novo na funcao CommentEnd
     
     return op_div;
@@ -214,10 +214,10 @@ State* LexicalAnalyzer::string_state() {
     State* cte_string = new State;
     State* interm = new State;
 
-    interm->actual = "[^\"]";
+    interm->actual = "[^\"||^\\\\]";
     interm->next = "\"";
     interm->next_state = cte_string;
-    interm->state_type = State_types::Inter;
+    interm->state_type = State_types::Ctrl_String;
 
     cte_string->actual = "";
     cte_string->next = "";
@@ -227,6 +227,23 @@ State* LexicalAnalyzer::string_state() {
 
     return interm;
 
+}
+
+State* LexicalAnalyzer::get_ctrl_string_state(char c) {
+    if(c == '\\') {
+        State* t = new State;
+
+        t->actual = "";
+        t->next = ".";
+        t->state_type = State_types::Inter;
+        t->next_state = actual_state;
+
+        return t;
+    }
+    else {
+        return actual_state->next_state;
+
+    }
 }
 
 State* LexicalAnalyzer::char_state(char c) {
@@ -451,8 +468,6 @@ void LexicalAnalyzer::dealoc_state(State* state) {
 Token* LexicalAnalyzer::nextToken() {
 
     Token* tk = new Token;
-    
-    
 
     if(program_file.eof() && current >= line_len) {
         //Se tiver tratado a linha anterior e só resta eof 
@@ -550,8 +565,11 @@ Token* LexicalAnalyzer::nextToken() {
         else if(actual_state->state_type == State_types::Caracter) {
             actual_state = char_state(line[current]);
         }
-        else if(actual_state->state_type == State_types::Comment_end) {
+        else if(actual_state->state_type == State_types::Comment_End) {
             actual_state = CommentEnd(line[current]);
+        }
+        else if(actual_state->state_type == State_types::Ctrl_String) {
+            actual_state = get_ctrl_string_state(line[current]);
         }
         else {
             tk->cat = Category::Error;

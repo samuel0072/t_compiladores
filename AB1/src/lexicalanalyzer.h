@@ -51,6 +51,7 @@ class LexicalAnalyzer {
         std::string cat_name(Category cat);
         void print_line();
         State* CommentEnd(char c);
+        State* get_ctrl_string_state(char c);
     
 
     public:
