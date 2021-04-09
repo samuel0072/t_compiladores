@@ -3,9 +3,6 @@
 #include <fstream>
 #include "lexicalanalyzer.h"
 
-
-
-
 int main(int argc, char * argv[]) {
 
     if(argc < 2) {
@@ -18,7 +15,7 @@ int main(int argc, char * argv[]) {
 
     while(tk->cat != Category::Eof && tk->cat != Category::Error) {
         tk = lex.nextToken();
-        printf("         [%04d, %04d] (%04d, %20s) ",
+        printf("          [%04d, %04d] (%04d, %20s) ",
          tk->line, tk->col, tk->cat, lex.get_cat_name(tk->cat));
         std::cout << "{" + tk->lex + "}\n";
     };
