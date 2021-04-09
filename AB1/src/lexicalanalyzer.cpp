@@ -134,13 +134,21 @@ State* LexicalAnalyzer::op_div_state() {
     comment_init->next_state = comment_end;
     comment_init->state_type = State_types::Inter;
 
-    comment_end->actual = "";
-    comment_end->next = "/";
-    comment_end->state_type = State_types::Inter;
-    comment_end->next_state = state_0;
+    comment_end->actual = "\\*";
+    comment_end->next = "";
+    comment_end->state_type = State_types::Comment_end;
+    comment_end->next_state = comment_init;//Isso aqui é só pra evitar de criar um estado novo na funcao CommentEnd
     
     return op_div;
-    
+}
+State* LexicalAnalyzer::CommentEnd(char c) {
+
+    if(c == '/') {
+        return state_0;//Volta pro estado inicial
+    }
+    else {
+        return actual_state->next_state;//Aqui é o estado anterior, pois no automato ele volta um estado
+    }
 }
 
 State* LexicalAnalyzer::op_add_state() {
@@ -229,17 +237,28 @@ State* LexicalAnalyzer::char_state(char c) {
     cte_char->state_type = State_types::End;
     cte_char->cat = Category::CteChar;
 
+    State* interm  = new State;
+
+    interm->actual = "";
+    interm->next = "\'";
+    interm->state_type = State_types::Inter;
+    interm->next_state = cte_char;
+
+    State* ctrl_char = new State;
+    ctrl_char->actual = "";
+    ctrl_char->next = ".";
+    ctrl_char->state_type = State_types::Inter;
+    ctrl_char->next_state = interm;
+
     std::string reg(1, c);
 
-    if(std::regex_match(reg, std::regex("[^\']"))) {
-        State* interm  = new State;
-
-        interm->actual = "";
-        interm->next = "\'";
-        interm->state_type = State_types::Inter;
-        interm->next_state = cte_char;
-
+    if(std::regex_match(reg, std::regex("[^\'|^\\\\]"))) {
+        // [^\\\\] a expressao regular fica como \\ que reconhece um caracter diferente de '\'
         return interm;
+    }
+    else if(std::regex_match(reg, std::regex("[\\\\]"))) {
+        //[\\\\]a expressao regular fica como \\ que reconhece um caracter '\'
+        return ctrl_char;
     }
 
     return cte_char;
@@ -530,6 +549,9 @@ Token* LexicalAnalyzer::nextToken() {
         }
         else if(actual_state->state_type == State_types::Caracter) {
             actual_state = char_state(line[current]);
+        }
+        else if(actual_state->state_type == State_types::Comment_end) {
+            actual_state = CommentEnd(line[current]);
         }
         else {
             tk->cat = Category::Error;

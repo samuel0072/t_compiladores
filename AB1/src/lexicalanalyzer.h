@@ -50,6 +50,7 @@ class LexicalAnalyzer {
         void dealoc_state(State* state);
         std::string cat_name(Category cat);
         void print_line();
+        State* CommentEnd(char c);
     
 
     public:
