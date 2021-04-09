@@ -1,4 +1,4 @@
 int main(){
-    output("%s", '\"');
+    output("%s", "Olá mundo!");
     return 0;
 } a= b;
