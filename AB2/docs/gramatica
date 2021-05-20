@@ -1,5 +1,5 @@
 Decls = Decl Decls
-        |
+        | ε
 
 Decl = FuncDecl
         | VarDecl
@@ -25,8 +25,8 @@ Param = Type 'Id'
 ! ===================================================================
 Block = '{' StmList '}' 
 
-StmList =  Stm StmList 
-        | 
+StmList = Stm StmList 
+        | ε
 
 Stm = VarDecl
         | 'if' '(' Expr ')' Block          
@@ -45,7 +45,7 @@ NormalStm = Block
 
 Arg = Expr ',' Arg
         | Expr
-        |
+        | ε
 
 
 ! ===================================================================
@@ -55,14 +55,14 @@ Arg = Expr ',' Arg
 VarDecl =  Type Var VarList  ';'
 
 VarList =  ',' Var VarList
-        | 
+        | ε
              
 Var = 'Id' Array
         | 'Id' Array '=' OpOr
 
 Array = '[' Expr ']'
         | '[' ']'
-        |
+        | ε
 
 
 ! ===================================================================
