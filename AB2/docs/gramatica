@@ -1,0 +1,127 @@
+Decls = Decl Decls
+        |
+
+Decl = FuncDecl
+        | VarDecl
+              
+! ===================================================================
+! Function  Declaration
+! ===================================================================
+
+FuncDecl = FuncId '(' Params  ')' Block
+        | FuncId '(' ')' Block
+
+FuncId = Type 'Id'
+        | Type '[' ']' 'Id'
+
+Params = Param ',' Params
+        | Param
+               
+Param = Type 'Id'
+
+
+! ===================================================================
+! Statements
+! ===================================================================
+Block = '{' StmList '}' 
+
+StmList =  Stm StmList 
+        | 
+
+Stm = VarDecl
+        | 'if' '(' Expr ')' Block          
+        | 'if' '(' Expr ')' Block 'else' Block         
+        | 'while' '(' Expr ')' Block 
+        | 'for' '(' Arg ';' Arg ';' Arg ';' Arg')' Block 
+        | NormalStm
+
+NormalStm = Block
+        | Expr ';'  
+        | 'break' ';'
+        | 'return' Expr ';'
+        | ';'          
+        | 'input' '(' Var VarList ')' ';'
+        | 'output' '('  StringLiteral ',' Var VarList ')' ';'    
+
+Arg = Expr ',' Arg
+        | Expr
+        |
+
+
+! ===================================================================
+! Variable Declaration
+! ===================================================================
+
+VarDecl =  Type Var VarList  ';'
+
+VarList =  ',' Var VarList
+        | 
+             
+Var = 'Id' Array
+        | 'Id' Array '=' OpOr
+
+Array = '[' Expr ']'
+        | '[' ']'
+        |
+
+
+! ===================================================================
+! Precedencia de operadores
+! ===================================================================
+Expr = OpConc '=' Expr
+        | OpConc
+
+OpConc = OpConc '++' OpOr
+        | OpOr
+
+OpOr = OpOr 'or' OpAnd
+        | OpAnd
+
+OpAnd = OpAnd 'and' OpXOr
+        | OpXOr
+
+OpXOr = OpXOr '^' OpEquate
+        | OpEquate
+
+OpEquate = OpEquate '==' OpCompare
+        | OpEquate '!=' OpCompare
+        | OpCompare
+
+OpCompare = OpCompare '<' OpAdd
+        | OpCompare '>' OpAdd
+        | OpCompare '<=' OpAdd
+        | OpCompare '>=' OpAdd
+        | OpAdd
+
+OpAdd = OpAdd '+' OpMult
+        | OpAdd '-' OpMult
+        | OpMult
+
+OpMult = OpMult '*' OpUnary
+        | OpMult '/' OpUnary
+        | OpMult '%' OpUnary
+        | OpUnary
+
+OpUnary = '!' OpUnary
+        | '-' OpUnary
+        | '+' OpaUnary
+        | '(' Type ')' OpUnary   
+        | Value
+
+Value = 'DecLiteral'
+        | 'StringLiteral'
+        | 'CharLiteral'
+        | 'FloatLiteral'
+        | 'BoolLiteral'
+        | 'Id' '(' Expr ')'
+        | 'Id' '(' ')'          
+        | 'Id'
+        | '(' Expr ')'
+
+Type = 'char'
+        | 'int'
+        | 'float'
+        | 'string'
+        | 'void'
+        | 'bool'          
+
