@@ -71,7 +71,6 @@ P = {
             | NormalStm
 
     NormalStm = Block
-            | Expr ';'  
             | Assing ';'
             | 'break' ';'
             | 'return' OpConc ';'
