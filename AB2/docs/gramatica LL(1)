@@ -1,0 +1,156 @@
+G = (N, T, P, Decls)
+
+N = {
+    Decls, Decl, FuncDecl, FuncId, Params, Param
+    Block, StmList, Stm, NormalStm, VarDecl, VarList,
+    Var, Array, ExprList, Expr, OpConc, OpOr, OpAndXor,
+    OpEquate, OpCompare, OpAdd, OpMult, OpUnary,
+    Value, IdList, Type
+}
+
+T = {
+    '(', ')', '[', ']', '{', '}', ',', 
+    ';', '=', '++', 'or', 'and', '^',
+    '==', '!=',  '<', '>', '<=', '>=',
+    '+', '-', '*', '/', '%', '!', 'Id',
+    'CteInt', 'CteString', 'CteChar',
+    'CteFloat', 'CteBool', 'char', 'int',
+    'float', 'string', 'void', 'bool'
+}
+
+Categ = ER: {
+    CtrlIf = 'if',  CtrlElse = 'else', LoopWhile = 'while', 
+    LoopFor = 'for', Break = 'break', Return = 'return',
+    Input  = 'input' , Output = 'output',  Integer = 'int' ,
+    Float = 'float', Char = 'char' , Void = 'void', String = 'string',
+    Boolean = 'bool', Parenth1= '(', Parenth2 = ')', Braces1 = '{', 
+    Braces2 = '}', Bracket1 = '[', Bracket2 = ']', OpAdd = '+',  
+    OpMinus = '-', OpDiv = '/', OpMult = '*',  
+    OpRem = '%', OpConcat = '++', OpGreater = '>',  
+    OpLesser = '<', OpGEqual = '>=', OpLEqual = '<=', 
+    OpEqual = '==', OpDiff = '!=' , OpBinXor = '^',  
+    OpNot = '!', OpAnd = 'and', OpOr = 'or',  
+    Assign = '=', Comma = ',', Terminator = ';',
+    Id = '[_a-zA-Z][_a-zA-Z0-9]*', dig = ‘[1-9]’,
+    Dig = ‘[0-9]’, CteInt = '{Dig}{Dig}*',
+    CteFloat = '({Dig})({Dig}*)\.({Dig}*)',
+    CteChar = '\’[^\’]\’', CteString = '\”([^\”]*)\”',
+    CteBool = '(true)|(false)'
+}
+
+P = {
+    Decls = Decl Decls
+            | ε
+
+    Decl = FuncDecl
+            | VarDecl
+                
+
+    FuncDecl = FuncId '(' Params  ')' Block
+            | FuncId '(' ')' Block
+
+    FuncId = Type 'Id'
+            | Type '[' ']' 'Id'
+
+    Params = Param ',' Params
+            | Param
+                
+    Param = Type 'Id'
+
+    
+    Block = '{' StmList '}' 
+
+    StmList = Stm StmList 
+            | ε
+
+    Stm = VarDecl
+            | 'if' '(' Expr ')' Block          
+            | 'if' '(' Expr ')' Block 'else' Block         
+            | 'while' '(' Expr ')' Block 
+            | 'for' '(' 'Id' ';' 'Id' ';' 'Id' ';' 'Id' ')' Block 
+            | NormalStm
+
+    NormalStm = Block
+            | Expr ';'  
+            | 'break' ';'
+            | 'return' Expr ';'
+            | ';'          
+            | 'input' '(' IdList ')' ';'
+            | 'output' '('  StringLiteral ',' IdList ')' ';'    
+
+
+    VarDecl =  Type Var VarList  ';'
+
+    VarList =  ',' Var VarList
+            | ε
+                
+    Var = 'Id' Array
+            | 'Id' Array '=' OpConc
+            | 'Id' Array '=' '{' ExprList '}'
+
+    Array = '[' Expr ']'
+            | '[' ']'
+            | ε
+
+    ExprList = Expr ',' ExprList
+            | Expr 
+
+    Expr = OpConc '=' Expr
+            | OpConc
+
+    OpConc = OpConc '++' OpOr
+            | OpOr
+
+    OpOr = OpOr 'or' OpAndXor
+            | OpAndXor
+
+    OpAndXor = OpAndXor 'and' OpEquate
+            | OpAndXor '^' OpEquate
+            | OpEquate
+
+    OpEquate = OpEquate '==' OpCompare
+            | OpEquate '!=' OpCompare
+            | OpCompare
+
+    OpCompare = OpCompare '<' OpAdd
+            | OpCompare '>' OpAdd
+            | OpCompare '<=' OpAdd
+            | OpCompare '>=' OpAdd
+            | OpAdd
+
+    OpAdd = OpAdd '+' OpMult
+            | OpAdd '-' OpMult
+            | OpMult
+
+    OpMult = OpMult '*' OpUnary
+            | OpMult '/' OpUnary
+            | OpMult '%' OpUnary
+            | OpUnary
+
+    OpUnary = '!' OpUnary
+            | '-' OpUnary
+            | '+' OpaUnary
+            | '(' Type ')' OpUnary   
+            | Value
+
+
+    Value = 'CteInt'
+            | 'CteString'
+            | 'CteChar'
+            | 'CteFloat'
+            | 'CteBool'
+            | 'Id' '(' Expr ')'
+            | 'Id' '(' ')'          
+            | 'Id'
+            | '(' Expr ')'
+
+    IdList = 'Id' ',' IdList
+            | 'Id'
+
+    Type = 'char'
+            | 'int'
+            | 'float'
+            | 'string'
+            | 'void'
+            | 'bool'          
+}
