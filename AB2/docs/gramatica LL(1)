@@ -79,8 +79,7 @@ P' = {
     ElseStm = 'else' Block
             | ε
 
-    NormalStm = Block
-            | Assing ';'
+    NormalStm =  Assing ';'
             | 'break' ';'
             | 'return' OpConc ';'
             | ';'          

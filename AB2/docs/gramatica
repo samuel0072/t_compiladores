@@ -70,8 +70,7 @@ P = {
             | 'for' '(' 'Id' ';' 'Id' ';' 'Id' ';' 'Id' ')' Block 
             | NormalStm
 
-    NormalStm = Block
-            | Assing ';'
+    NormalStm =  Assing ';'
             | 'break' ';'
             | 'return' OpConc ';'
             | ';'          
