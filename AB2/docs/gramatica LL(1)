@@ -95,19 +95,17 @@ P' = {
             | 'output' '('  StringLiteral ',' Expr ')' ';'    
 
     VarDecl = Type 'Id' Array Init DefList ';'
-
-    Expr = OpConc ExprAux
-
-    ExprAux = ',' Expr
-            | ε
-
+   
     OpConc = OpOr OpCAux
-            | '(' OpConc ')' OpCAux
+            | '(' OpConc ')' OpCBux OpCAux
 
     OpCAux = '++' OpOr OpCAux 
-            | '=' OpConc OpCAux
+            | '=' OpOr OpCAux
             | ε
-    
+
+     OpCBux = OpConc
+            | ε
+
     OpOr = OpAndXor OpOrAux
 
     OpOrAux = 'or' OpAndXor OpOrAux
@@ -162,6 +160,10 @@ P' = {
     ParamAux =  Expr 
             |  ε
 
+    Expr = OpConc ExprAux
+
+    ExprAux = ',' Expr
+            | ε
 
     Type = 'char'
             | 'int'

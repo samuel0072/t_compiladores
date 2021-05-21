@@ -85,8 +85,10 @@ P = {
 
     OpConc = OpConc '++' OpOr
             | OpConc '=' OpOr
-            | OpOr
+            | '(' OpConc ')' OpConc 
             | '(' OpConc ')'
+            | OpOr
+           
 
     OpOr = OpOr 'or' OpAndXor
             | OpAndXor
