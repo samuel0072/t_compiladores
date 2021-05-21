@@ -1,4 +1,4 @@
-G = (N, T, P, Decls)
+G' = (N, T, P', Decls)
 
 N = {
     Decls, Decl, FuncDecl, FuncId, Params, Param
@@ -38,7 +38,7 @@ Categ = ER: {
     CteBool = '(true)|(false)'
 }
 
-P = {
+P' = {
     Decls = Decl Decls
             | ε
 
@@ -46,29 +46,36 @@ P = {
             | VarDecl
                 
 
-    FuncDecl = FuncId '(' Params  ')' Block
-            | FuncId '(' ')' Block
+    FuncDecl = FuncId '(' FuncDeclAux
+    
+    FuncDeclAux = Params  ')' Block
+            | ')' Block
 
-    FuncId = Type 'Id'
-            | Type '[' ']' 'Id'
+    FuncId = Type FuncIdAux
 
-    Params = Param ',' Params
-            | Param
+    FuncIdAux = 'Id'
+            | '[' ']' 'Id'
+
+    Params = Param ParamsAux
+
+    ParamsAux = ',' Params
+            | ε
                 
     Param = Type 'Id'
 
-    
     Block = '{' StmList '}' 
 
     StmList = Stm StmList 
             | ε
 
     Stm = VarDecl
-            | 'if' '(' Expr ')' Block          
-            | 'if' '(' Expr ')' Block 'else' Block         
+            | 'if' '(' Expr ')' Block ElseStm        
             | 'while' '(' Expr ')' Block 
             | 'for' '(' 'Id' ';' 'Id' ';' 'Id' ';' 'Id' ')' Block 
             | NormalStm
+
+    ElseStm = 'else' Block
+            | ε
 
     NormalStm = Block
             | Expr ';'  
@@ -78,25 +85,35 @@ P = {
             | 'input' '(' IdList ')' ';'
             | 'output' '('  StringLiteral ',' IdList ')' ';'    
 
-
     VarDecl =  Type Var VarList  ';'
 
     VarList =  ',' Var VarList
             | ε
                 
-    Var = 'Id' Array
-            | 'Id' Array '=' OpConc
-            | 'Id' Array '=' '{' ExprList '}'
+    Var = 'Id' Array VarBux
 
-    Array = '[' Expr ']'
-            | '[' ']'
+    VarBux = '=' VarAux
             | ε
 
-    ExprList = Expr ',' ExprList
-            | Expr 
+    VarAux = OpConc
+            | '{' ExprList '}'
 
-    Expr = OpConc '=' Expr
-            | OpConc
+    
+    Array = '[' ArrayAux 
+            | ε
+
+    ArrayAux = Expr ']'
+            | ']'
+
+    ExprList = Expr ELAux
+    
+    ELAux = ',' ExprList
+            | ε
+
+    Expr = OpConc ExprAux
+    
+    ExprAux = '=' Expr
+            | ε
 
     OpConc = OpConc '++' OpOr
             | OpOr
@@ -104,28 +121,38 @@ P = {
     OpOr = OpOr 'or' OpAndXor
             | OpAndXor
 
-    OpAndXor = OpAndXor 'and' OpEquate
-            | OpAndXor '^' OpEquate
+    OpAndXor = OpAndXor OpAXAux
             | OpEquate
 
-    OpEquate = OpEquate '==' OpCompare
-            | OpEquate '!=' OpCompare
+    OpAXAux = 'and' OpEquate
+            | '^' OpEquate
+
+    OpEquate = OpEquate OpEAux
             | OpCompare
 
-    OpCompare = OpCompare '<' OpAdd
-            | OpCompare '>' OpAdd
-            | OpCompare '<=' OpAdd
-            | OpCompare '>=' OpAdd
+    OpEAux = '==' OpCompare
+            | '!=' OpCompare
+
+    OpCompare = OpCompare OpCAux
             | OpAdd
 
-    OpAdd = OpAdd '+' OpMult
-            | OpAdd '-' OpMult
+    OpCAux = '<' OpAdd
+            | '>' OpAdd
+            | '<=' OpAdd
+            | '>=' OpAdd
+
+    OpAdd = OpAdd OpAddAux
             | OpMult
 
-    OpMult = OpMult '*' OpUnary
-            | OpMult '/' OpUnary
-            | OpMult '%' OpUnary
+    OpAddAux = '+' OpMult
+            | '-' OpMult
+
+    OpMult = OpMult OpMAux
             | OpUnary
+
+    OpMAux = '*' OpUnary
+            | '/' OpUnary
+            | '%' OpUnary
 
     OpUnary = '!' OpUnary
             | '-' OpUnary
@@ -139,13 +166,19 @@ P = {
             | 'CteChar'
             | 'CteFloat'
             | 'CteBool'
-            | 'Id' '(' Expr ')'
-            | 'Id' '(' ')'          
-            | 'Id'
+            | 'Id' ValueAux
             | '(' Expr ')'
 
-    IdList = 'Id' ',' IdList
-            | 'Id'
+    ValueAux = '(' ValueBAux
+            | ε
+
+    ValueBAux =  Expr ')'
+            | ')' 
+
+    IdList = 'Id' IdLAux
+
+    IdLAux = ',' IdList
+            | ε
 
     Type = 'char'
             | 'int'
