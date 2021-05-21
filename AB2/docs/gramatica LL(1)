@@ -1,13 +1,14 @@
 G' = (N', T, P', Decls)
 
 N' = {
-    Decls, Decl, FuncDecl, FuncId, Params, Param
-    Block, StmList, Stm, NormalStm, VarDecl, VarList,
-    Var, Array, ExprList, Expr, OpConc, OpOr, OpAndXor,
+    Decls, Decl , StmList, Stm, NormalStm, 
+    VarDecl,  Array, Expr, OpConc, OpOr, OpAndXor,
     OpEquate, OpCompare, OpAdd, OpMult, OpUnary,
-    Value, Type, VarBux, VarAux, ArrayAux, ExprAux, 
+    Value, Type, DefList, Init,
+    VarBux, VarAux, ArrayAux, ExprAux, 
     OpCAux, OpOrAux, OpAXAux, OpEAux, OpCAux, OpAddAux,
-    OpMAux, ValueAux, ParamAux
+    OpMAux, ValueAux, ParamAux, DeclAux, DeclBux, DeclCux,
+    DLAux,  InitAux, 
 }
 
 T = {
@@ -44,69 +45,56 @@ P' = {
     Decls = Decl Decls
             | ε
 
-    Decl = FuncDecl
-            | VarDecl
-                
+    Decl = Type DeclAux
+       
+    DeclAux = 'Id' DeclBux
+        | '[' ']' 'Id' '(' DeclCux
 
-    FuncDecl = FuncId '(' FuncDeclAux
+    DeclBux = Array Init DefList ';'
+            | '(' DeclCux
     
-    FuncDeclAux = Params  ')' Block
-            | ')' Block
-
-    FuncId = Type FuncIdAux
-
-    FuncIdAux = 'Id'
-            | '[' ']' 'Id'
-
-    Params = Param ParamsAux
-
-    ParamsAux = ',' Params
-            | ε
+    DeclCux = ')' '{' StmList '}'
+            | Type Array 'Id' DefList ')' '{' StmList '}'
+    
                 
-    Param = Type 'Id'
+    DefList = ',' DLAux
+            | ε
 
-    Block = '{' StmList '}' 
+    DLAux = Type 'Id' Array DefList
+            |'Id' Array Init DefList
+
+    Array = '[' ArrayAux
+            | ε
+    
+    ArrayAux = OpConc ']'
+            | ']'
+
+    Init = '=' InitAux
+            | ε
+
+    InitAux = OpConc
+            | '{' Expr '}'
 
     StmList = Stm StmList 
             | ε
 
     Stm = VarDecl
-            | 'if' '(' Expr ')' Block ElseStm        
-            | 'while' '(' Expr ')' Block 
-            | 'for' '(' 'Id' ';' 'Id' ';' 'Id' ';' 'Id' ')' Block 
+            | 'if' '(' OpConc ')' '{' StmList '}' ElseStm               
+            | 'while' '(' Expr ')' '{' StmList '}' 
+            | 'for' '(' 'Id' ';' 'Id' ';' 'Id' ';' 'Id' ')' '{' StmList '}' 
             | NormalStm
 
-    ElseStm = 'else' Block
+    ElseStm = 'else' '{' StmList '}' 
             | ε
 
-    NormalStm =  Assing ';'
+    NormalStm =  OpConc ';'
             | 'break' ';'
             | 'return' OpConc ';'
             | ';'          
             | 'input' '(' Expr ')' ';'
             | 'output' '('  StringLiteral ',' Expr ')' ';'    
 
-    VarDecl =  Type Var VarList  ';'
-
-    VarList =  ',' Var VarList
-            | ε
-                
-    Var = 'Id' Array VarBux
-
-    VarBux = '=' VarAux
-            | ε
-
-    VarAux = OpConc
-            | '{'  Expr '}'
-
-    
-    Array = '[' ArrayAux 
-            | ε
-
-    ArrayAux = OpConc ']'
-            | ']'
-
-    Assing = 'Id' '=' OpConc
+    VarDecl = Type 'Id' Array Init DefList ';'
 
     Expr = OpConc ExprAux
 
@@ -114,11 +102,12 @@ P' = {
             | ε
 
     OpConc = OpOr OpCAux
+            | '(' OpConc ')' OpCAux
 
-    OpCAux = '++' OpOr OpCAux
+    OpCAux = '++' OpOr OpCAux 
+            | '=' OpConc OpCAux
             | ε
     
-
     OpOr = OpAndXor OpOrAux
 
     OpOrAux = 'or' OpAndXor OpOrAux
@@ -158,11 +147,7 @@ P' = {
             | ε
 
     OpUnary = '!' OpUnary
-            | '-' OpUnary
-            | '+' OpaUnary
-            | '(' Type ')' OpUnary   
             | Value
-
 
     Value = 'CteInt'
             | 'CteString'
@@ -170,7 +155,6 @@ P' = {
             | 'CteFloat'
             | 'CteBool'
             | 'Id' ValueAux
-            | '(' OpConc ')'
 
     ValueAux = '(' ParamAux ')'
             | ε
