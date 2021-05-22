@@ -4,11 +4,11 @@ N' = {
     Decls, Decl , StmList, Stm, NormalStm, 
     VarDecl,  Array, Expr, OpConc, OpOr, OpAndXor,
     OpEquate, OpCompare, OpAdd, OpMult, OpUnary,
-    Value, Type, DefList, Init,
-    VarBux, VarAux, ArrayAux, ExprAux, 
-    OpCAux, OpOrAux, OpAXAux, OpEAux, OpCAux, OpAddAux,
-    OpMAux, ValueAux, ParamAux, DeclAux, DeclBux, DeclCux,
-    DLAux,  InitAux, 
+    Value, Type, Init, ParamDef, VarList
+    ArrayAux, ExprAux, OpCAux,OpCBux, OpOrAux, 
+    OpAXAux, OpEAux, OpCAux, OpAddAux,
+    OpMAux, ValueAux, ParamAux, InitAux, 
+    ParamDAux
 }
 
 T = {
@@ -18,7 +18,9 @@ T = {
     '+', '-', '*', '/', '%', '!', 'Id',
     'CteInt', 'CteString', 'CteChar',
     'CteFloat', 'CteBool', 'char', 'int',
-    'float', 'string', 'void', 'bool'
+    'float', 'string', 'void', 'bool', 'def',
+    'if', 'else', 'break', 'for', 'while', 'return',
+    'input', 'output'
 }
 
 Categ = ER: {
@@ -33,7 +35,7 @@ Categ = ER: {
     OpLesser = '<', OpGEqual = '>=', OpLEqual = '<=', 
     OpEqual = '==', OpDiff = '!=' , OpBinXor = '^',  
     OpNot = '!', OpAnd = 'and', OpOr = 'or',  
-    Assign = '=', Comma = ',', Terminator = ';',
+    Assign = '=', Comma = ',', Terminator = ';', Def = 'def',
     Id = '[_a-zA-Z][_a-zA-Z0-9]*', dig = ‘[1-9]’,
     Dig = ‘[0-9]’, CteInt = '{Dig}{Dig}*',
     CteFloat = '({Dig})({Dig}*)\.({Dig}*)',
@@ -45,35 +47,14 @@ P' = {
     Decls = Decl Decls
             | ε
 
-    Decl = Type DeclAux
-       
-    DeclAux = 'Id' DeclBux
-        | '[' ']' 'Id' '(' DeclCux
+    Decl = VarDecl
+        | 'def' Type Array 'Id' '(' ParamDef ')' '{' StmList '}'
 
-    DeclBux = Array Init DefList ';'
-            | '(' DeclCux
-    
-    DeclCux = ')' '{' StmList '}'
-            | Type Array 'Id' DefList ')' '{' StmList '}'
-    
-                
-    DefList = ',' DLAux
+    ParamDef = Type Array 'Id' ParamDAux
             | ε
 
-    DLAux = Type 'Id' Array DefList
-            |'Id' Array Init DefList
-
-    Array = '[' ArrayAux
+    ParamDAux = ',' ParamDef
             | ε
-    
-    ArrayAux = OpConc ']'
-            | ']'
-
-    Init = '=' InitAux
-            | ε
-
-    InitAux = OpConc
-            | '{' Expr '}'
 
     StmList = Stm StmList 
             | ε
@@ -96,6 +77,18 @@ P' = {
 
     VarDecl = Type 'Id' Array Init DefList ';'
 
+    Init = '=' InitAux
+            | ε
+
+    InitAux = OpConc
+            | '{' Expr '}'
+
+    Array = '[' ArrayAux
+            | ε
+    
+    ArrayAux = OpConc ']'
+            | ']'
+
     OpConc = OpOr OpCAux
             | '(' OpCBux
 
@@ -103,7 +96,7 @@ P' = {
             | '=' OpOr OpCAux
             | ε
 
-    OpBux = Type ')' 'Id'
+    OpCBux = Type ')' 'Id'
             | OpOr OpCAux ')'
             | '(' OpCBux ')'
 
