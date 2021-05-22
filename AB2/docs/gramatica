@@ -85,7 +85,7 @@ P = {
 
     OpConc = OpConc '++' OpOr
             | OpConc '=' OpOr
-            | '(' OpConc ')' OpConc 
+            | '(' Type ')' 'Id' 
             | '(' OpConc ')'
             | OpOr
            

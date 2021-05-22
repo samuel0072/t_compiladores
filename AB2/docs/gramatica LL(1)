@@ -95,16 +95,17 @@ P' = {
             | 'output' '('  StringLiteral ',' Expr ')' ';'    
 
     VarDecl = Type 'Id' Array Init DefList ';'
-   
-    OpConc = OpOr OpCAux
-            | '(' OpConc ')' OpCBux OpCAux
 
-    OpCAux = '++' OpOr OpCAux 
+    OpConc = OpOr OpCAux
+            | '(' OpCBux
+
+    OpCAux = '++' OpOr OpCAux
             | '=' OpOr OpCAux
             | ε
 
-     OpCBux = OpConc
-            | ε
+    OpBux = Type ')' 'Id'
+            | OpOr OpCAux ')'
+            | '(' OpCBux ')'
 
     OpOr = OpAndXor OpOrAux
 
