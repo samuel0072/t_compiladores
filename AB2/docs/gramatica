@@ -4,7 +4,8 @@ N = {
     Decls, Decl , StmList, Stm, NormalStm, 
     VarDecl,  Array, OpConc, OpOr, OpAndXor,
     OpEquate, OpCompare, OpAdd, OpMult, OpUnary,
-    Value, Type, Init, ParamDef, VarList, ParamList
+    Value, Type, Init, ParamDef, VarList, 
+	ParamList, ParamLAux, OpCList
 }
 
 T = {
@@ -31,7 +32,7 @@ Categ = ER: {
     OpLesser = '<', OpGEqual = '>=', OpLEqual = '<=', 
     OpEqual = '==', OpDiff = '!=' , OpBinXor = '^',  
     OpNot = '!', OpAnd = 'and', OpOr = 'or',  
-    Assign = '=', Comma = ',', Terminator = ';', Def = 'def',
+    Assign = '=', Comma = ',', Terminator = ';',
     Id = '[_a-zA-Z][_a-zA-Z0-9]*', dig = ‘[1-9]’,
     Dig = ‘[0-9]’, CteInt = '{Dig}{Dig}*',
     CteFloat = '({Dig})({Dig}*)\.({Dig}*)',
@@ -44,15 +45,12 @@ P = {
     Decls = Decl Decls
             | ε
 
-    Decl = VarDecl
-        | 'def' Type Array 'Id' '(' ParamDef ')' '{' StmList '}'
+    Decl = Type 'Id' Array Init VarList ';'
+        | Type 'Id' '(' ParamDef ')' '{' StmList '}'
+		| Type '[' ']' 'Id' '(' ParamDef ')' '{' StmList '}'
 
     ParamDef = Type Array 'Id' 
             | Type Array 'Id' ',' ParamDef
-            | ε
-
-    Array = '[' OpConc ']'
-            | '[' ']'
             | ε
 
     StmList = Stm StmList 
@@ -69,18 +67,21 @@ P = {
             | 'break' ';'
             | 'return' OpConc ';'
             | ';'          
-            | 'input' '(' Expr ')' ';'
-            | 'output' '('  StringLiteral ',' Expr ')' ';'    
+            | 'input' '(' ParamList ')' ';'
+            | 'output' '('  StringLiteral ',' ParamList ')' ';'    
     
     VarDecl = Type 'Id' Array Init VarList ';'
 
     Init = '=' OpConc
-            | '=' '{' OpConc ParamList '}'
+            | '=' '{' OpConc OpCList '}'
             | ε
     
     VarList = ',' 'Id' Array Init VarList
             | ε
 
+	 Array = '[' OpConc ']'
+            | '[' ']'
+            | ε
 
     Expr = OpConc ',' Expr
             | OpConc 
@@ -129,14 +130,19 @@ P = {
             | 'CteChar'
             | 'CteFloat'
             | 'CteBool'
-            | 'Id' '(' OpConc ParamList ')'
-            | 'Id' '(' ')'          
+            | 'Id' '(' ParamList ')'       
             | 'Id'
     
-    ParamList =  ',' OpConc ParamList 
+    ParamList = 'Id' ParamLAux 
             |  ε
-
-    Type = 'char'
+	
+	ParamLAux = ',' 'Id' ParamLAux
+            | ε
+	
+	OpCList = ',' OpConc OpCList
+            | ε
+    
+	Type = 'char'
             | 'int'
             | 'float'
             | 'string'
