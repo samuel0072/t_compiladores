@@ -2,9 +2,9 @@ G = (N, T, P, Decls)
 
 N = {
     Decls, Decl , StmList, Stm, NormalStm, 
-    VarDecl,  Array, Expr, OpConc, OpOr, OpAndXor,
+    VarDecl,  Array, OpConc, OpOr, OpAndXor,
     OpEquate, OpCompare, OpAdd, OpMult, OpUnary,
-    Value, Type, Init, ParamDef, VarList
+    Value, Type, Init, ParamDef, VarList, ParamList
 }
 
 T = {
@@ -40,6 +40,7 @@ Categ = ER: {
 }
 
 P = {
+
     Decls = Decl Decls
             | ε
 
@@ -74,7 +75,7 @@ P = {
     VarDecl = Type 'Id' Array Init VarList ';'
 
     Init = '=' OpConc
-            | '=' '{' Expr '}'
+            | '=' '{' OpConc ParamList '}'
             | ε
     
     VarList = ',' 'Id' Array Init VarList
@@ -119,7 +120,7 @@ P = {
 
     OpUnary = '!' OpUnary
             | '-' OpUnary
-            | '+' OpaUnary   
+            | '+' OpUnary   
             | Value
 
 
@@ -128,9 +129,12 @@ P = {
             | 'CteChar'
             | 'CteFloat'
             | 'CteBool'
-            | 'Id' '(' Expr ')'
+            | 'Id' '(' OpConc ParamList ')'
             | 'Id' '(' ')'          
             | 'Id'
+    
+    ParamList =  ',' OpConc ParamList 
+            |  ε
 
     Type = 'char'
             | 'int'

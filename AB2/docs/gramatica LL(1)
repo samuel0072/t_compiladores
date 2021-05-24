@@ -2,13 +2,12 @@ G' = (N', T, P', Decls)
 
 N' = {
     Decls, Decl , StmList, Stm, NormalStm, 
-    VarDecl,  Array, Expr, OpConc, OpOr, OpAndXor,
-    OpEquate, OpCompare, OpAdd, OpMult, OpUnary,
-    Value, Type, Init, ParamDef, VarList
-    ArrayAux, ExprAux, OpCAux,OpCBux, OpOrAux, 
-    OpAXAux, OpEAux, OpCAux, OpAddAux,
-    OpMAux, ValueAux, ParamAux, InitAux, 
-    ParamDAux
+    VarDecl,  Array, OpConc, OpOr, OpAndXor, 
+    OpEquate, OpCompare, OpAdd, OpMult, OpUnary, 
+    Value, Type, Init, ParamDef, ArrayAux, 
+    OpCoAux, ParamDAux, OpCoBux, OpOrAux, OpAXAux, 
+    OpEAux, OpCAux,  OpAddAux,OpMAux, ValueAux, 
+    InitAux, VarList, ParamList
 }
 
 T = {
@@ -44,125 +43,126 @@ Categ = ER: {
 }
 
 P' = {
-    Decls = Decl Decls
-            | ε
 
-    Decl = VarDecl
-        | 'def' Type Array 'Id' '(' ParamDef ')' '{' StmList '}'
+( 1)    Decls = Decl Decls
+( 2)            | ε
 
-    ParamDef = Type Array 'Id' ParamDAux
-            | ε
+( 3)    Decl = VarDecl
+( 4)        | 'def' Type Array 'Id' '(' ParamDef ')' '{' StmList '}'
 
-    ParamDAux = ',' ParamDef
-            | ε
+( 5)    ParamDef = Type Array 'Id' ParamDAux
+( 6)            | ε
 
-    StmList = Stm StmList 
-            | ε
+( 7)    ParamDAux = ',' ParamDef
+( 8)            | ε
 
-    Stm = VarDecl
-            | 'if' '(' OpConc ')' '{' StmList '}' ElseStm               
-            | 'while' '(' Expr ')' '{' StmList '}' 
-            | 'for' '(' 'Id' ';' 'Id' ';' 'Id' ';' 'Id' ')' '{' StmList '}' 
-            | NormalStm
+( 9)    StmList = Stm StmList 
+(10)            | ε
 
-    ElseStm = 'else' '{' StmList '}' 
-            | ε
+(11)    Stm = VarDecl
+(12)            | 'if' '(' OpConc ')' '{' StmList '}' ElseStm               
+(13)            | 'while' '(' Expr ')' '{' StmList '}' 
+(14)            | 'for' '(' 'Id' ';' 'Id' ';' 'Id' ';' 'Id' ')' '{' StmList '}' 
+(15)            | NormalStm
 
-    NormalStm =  OpConc ';'
-            | 'break' ';'
-            | 'return' OpConc ';'
-            | ';'          
-            | 'input' '(' Expr ')' ';'
-            | 'output' '('  StringLiteral ',' Expr ')' ';'    
+(16)    ElseStm = 'else' '{' StmList '}' 
+(17)           | ε
+(18)    NormalStm =  OpConc ';'
+(19)            | 'break' ';'
+(20)            | 'return' OpConc ';'
+(21)            | ';'          
+(22)            | 'input' '(' OpConc ParamList ')' ';'
+(23)            | 'output' '('  StringLiteral ',' OpConc ParamList ')' ';'    
 
-    VarDecl = Type 'Id' Array Init DefList ';'
+(24)    VarDecl = Type 'Id' Array Init VarList ';'
 
-    Init = '=' InitAux
-            | ε
+(25)    VarList = ',' 'Id' Array Init VarList
+(26)            | ε
 
-    InitAux = OpConc
-            | '{' Expr '}'
+(27)    Init = '=' InitAux
+(28)            | ε
 
-    Array = '[' ArrayAux
-            | ε
+(29)    InitAux = OpConc
+(30)            | '{' OpConc ParamList '}'
+
+(31)    Array = '[' ArrayAux
+(32)            | ε
     
-    ArrayAux = OpConc ']'
-            | ']'
+(33)    ArrayAux = OpConc ']'
+(34)            | ']'
 
-    OpConc = OpOr OpCAux
-            | '(' OpCBux
+(35)    OpConc = OpOr OpCoAux
+(36)            | '(' OpCBux
 
-    OpCAux = '++' OpOr OpCAux
-            | '=' OpOr OpCAux
-            | ε
+(37)    OpCoAux = '++' OpOr OpCoAux
+(38)            | '=' OpOr OpCoAux
+(39)            | ε
 
-    OpCBux = Type ')' 'Id'
-            | OpOr OpCAux ')'
-            | '(' OpCBux ')'
+(40)    OpCoBux = Type ')' 'Id'
+(41)            | OpOr OpCoAux ')'
+(42)            | '(' OpCoBux ')'
 
-    OpOr = OpAndXor OpOrAux
+(43)    OpOr = OpAndXor OpOrAux
 
-    OpOrAux = 'or' OpAndXor OpOrAux
-            | ε
+(44)    OpOrAux = 'or' OpAndXor OpOrAux
+(45)            | ε
 
-    OpAndXor = OpEquate OpAXAux
+(46)    OpAndXor = OpEquate OpAXAux
 
-    OpAXAux = 'and' OpEquate OpAXAux
-            | '^' OpEquate OpAXAux
-            | ε
+(47)    OpAXAux = 'and' OpEquate OpAXAux
+(48)            | '^' OpEquate OpAXAux
+(49)            | ε
 
-    OpEquate = OpCompare OpEAux
+(50)    OpEquate = OpCompare OpEAux
 
-    OpEAux = '==' OpCompare OpEAux
-            | '!=' OpCompare OpEAux
-            | ε
+(51)    OpEAux = '==' OpCompare OpEAux
+(52)            | '!=' OpCompare OpEAux
+(53)            | ε
 
-    OpCompare = OpAdd OpCAux
+(54)    OpCompare = OpAdd OpCAux
 
-    OpCAux = '<' OpAdd OpCAux
-            | '>' OpAdd OpCAux
-            | '<=' OpAdd OpCAux
-            | '>=' OpAdd OpCAux
-            | ε
+(55)    OpCAux = '<' OpAdd OpCAux
+(56)            | '>' OpAdd OpCAux
+(57)            | '<=' OpAdd OpCAux
+(58)            | '>=' OpAdd OpCAux
+(59)            | ε
  
-    OpAdd = OpMult OpAddAux
+(60)    OpAdd = OpMult OpAddAux
 
-    OpAddAux = '+' OpMult OpAddAux
-            | '-' OpMult OpAddAux
-            | ε
+(61)    OpAddAux = '+' OpMult OpAddAux
+(62)            | '-' OpMult OpAddAux
+(63)            | ε
 
-    OpMult = OpUnary OpMAux
+(64)    OpMult = OpUnary OpMAux
 
-    OpMAux = '*' OpUnary OpMAux
-            | '/' OpUnary OpMAux
-            | '%' OpUnary OpMAux
-            | ε
+(65)    OpMAux = '*' OpUnary OpMAux
+(66)            | '/' OpUnary OpMAux
+(67)            | '%' OpUnary OpMAux
+(68)            | ε
 
-    OpUnary = '!' OpUnary
-            | Value
+(69)    OpUnary = '!' OpUnary
+(70)            | '-' OpUnary
+(71)            | '+' OpUnary  
+(72)            | Value
 
-    Value = 'CteInt'
-            | 'CteString'
-            | 'CteChar'
-            | 'CteFloat'
-            | 'CteBool'
-            | 'Id' ValueAux
+(73)    Value = 'CteInt'
+(74)            | 'CteString'
+(75)            | 'CteChar'
+(76)            | 'CteFloat'
+(77)            | 'CteBool'
+(78)            | 'Id' ValueAux
 
-    ValueAux = '(' ParamAux ')'
-            | ε
+(79)    ValueAux = '(' OpConc ParamList ')'
+                | '(' ')'
+(80)            | ε
 
-    ParamAux =  Expr 
-            |  ε
+(81)    ParamList =  ',' OpConc ParamList 
+(82)            |  ε
 
-    Expr = OpConc ExprAux
-
-    ExprAux = ',' Expr
-            | ε
-
-    Type = 'char'
-            | 'int'
-            | 'float'
-            | 'string'
-            | 'void'
-            | 'bool'          
+(83)    Type = 'char'
+(84)            | 'int'
+(85)            | 'float'
+(86)            | 'string'
+(87)            | 'void'
+(88)            | 'bool'          
 }
