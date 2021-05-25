@@ -160,21 +160,22 @@ P' = {
 (81)            | 'Id' ValueAux
 
 (82)    ValueAux = '(' ParamList ')'
-(83)            | ε
+(83)            | '[' OpConc ']'
+(84)            | ε
 
-(84)    ParamList =  'Id' ParamLAux 
-(85)            | ε
+(85)    ParamList =  'Id' ParamLAux 
+(86)            | ε
         
-(86)    ParamLAux = ',' 'Id' ParamLAux
-(87)            | ε
+(87)    ParamLAux = ',' 'Id' ParamLAux
+(88)            | ε
 
-(88)    OpCList = ',' OpConc OpCList
-(89)            | ε
+(89)    OpCList = ',' OpConc OpCList
+(90)            | ε
 
-(90)    Type = 'char'
-(91)            | 'int'
-(92)            | 'float'
-(93)            | 'string'
-(94)            | 'void'
-(95)            | 'bool'          
+(91)    Type = 'char'
+(92)            | 'int'
+(93)            | 'float'
+(94)            | 'string'
+(95)            | 'void'
+(96)            | 'bool'          
 }

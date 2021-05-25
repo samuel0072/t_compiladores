@@ -130,7 +130,8 @@ P = {
             | 'CteChar'
             | 'CteFloat'
             | 'CteBool'
-            | 'Id' '(' ParamList ')'       
+            | 'Id' '(' ParamList ')'
+            | 'Id' '[' OpConc ']'            
             | 'Id'
     
     ParamList = 'Id' ParamLAux 
