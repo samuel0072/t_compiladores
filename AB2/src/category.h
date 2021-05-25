@@ -25,9 +25,6 @@ Lexema é para regras que o handle é somente um lexema
 Error é para representar os erros da tabela de analise
 Empty é para representar produções vazias
 */
-enum Prod_types {
-   Rule = 1, Lexeme, Error, Empty
-};
 
 /*
 Não terminais da linguagem ordenados conforme ordem de aparição
@@ -37,18 +34,18 @@ Indexados a partir do 0
 enum N_Term {
    Decls = 0, Decl, DeclAux, DeclBux, ParamDef,
    ParamDAux, StmList, Stm, ElseStm, NormalStm,
-   VarDecl, VarList, Init, InitAux, Array,
-   ArrayAux, OpConc, OpCoAux, OpCoBux, OpOr,
+   VarDecl, VarList, NInit, InitAux, Array,
+   ArrayAux, OpConc, OpCoAux, OpCoBux, NOpOr,
    OpOrAux, OpAndXor, OpAXAux, OpEquate, OpEAux,
-   OpCompare, OpCAux, OpAdd, OpAddAux, OpMult,
+   OpCompare, OpCAux, NOpAdd, OpAddAux, NOpMult,
    OpMAux, OpUnary, Value, ValueAux, ParamList,
    ParamLAux, OpCList, Type, Empty,
-   CtrlIf, CtrlElse, LoopWhile, LoopFor,  Break,
-   Return, Input, Output, Integer, Float, Char, Void,String, Boolean, 
-   Parenth1, Parenth2, Braces1,Braces2, Bracket1, Bracket2, OpAddT, 
-   OpMinus, OpDiv, OpMultT, OpRem, OpConcat, OpGreater, OpLesser, OpGEqual,
-   OpLEqual, OpEqual, OpDiff, OpBinXor,OpNot, OpAnd, OpOrT, Assign, Comma, 
-   Terminator, Error, Id, CteInt, CteFloat, CteChar, CteString, CteBool, Eof
+   TCtrlIf, TCtrlElse, TLoopWhile, TLoopFor,  TBreak,
+   TReturn, TInput, TOutput, TInteger, TFloat, TChar, TVoid,TString, TBoolean, 
+   TParenth1, TParenth2, TBraces1,TBraces2, TBracket1, TBracket2, TOpAdd, 
+   TOpMinus, TOpDiv, TOpMult, TOpRem, TOpConcat, TOpGreater, TOpLesser, TOpGEqual,
+   TOpLEqual, TOpEqual, TOpDiff, TOpBinXor,TOpNot, TOpAnd, TOpOr, TAssign, TComma, 
+   TTerminator, TError, TId, TCteInt, TCteFloat, TCteChar, TCteString, TCteBool, TEof
 };
 
 #endif

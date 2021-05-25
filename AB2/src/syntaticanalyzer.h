@@ -1,6 +1,5 @@
 #ifndef SYNTACTIC_ANALYZER_H
 #define SYNTACTIC_ANALYZER_H
-#include "category.h"
 #include "lexicalanalyzer.h"
 #include <vector>
 #include <string>
@@ -10,6 +9,7 @@
 #define PROD_MAX 95//Quandtidade de produções da gramatica LL(1)
 #define TOKEN_COUNT 47 //Quantidade de tokens definidos em category.h
 #define ERROR_COUNT 6 //Quantidade de erros identificados na tabela de análise 
+#define OFF_SET 39
 typedef struct Production Production;
 
 /*
@@ -25,15 +25,15 @@ n_category é a categoria do não terminal
 struct Production {
     unsigned int id;
     N_Term n_category;//categoria do não terminal
-    std::vector<int> handle;
+    std::vector<N_Term> handle;
 };
 
 
 class SyntaticAnalyzer {
     private:
-        std::stack<int> prod_stack;//pilha 
+        std::stack<N_Term> prod_stack;//pilha 
         unsigned int analysis_table[N_TERM_COUNT][TOKEN_COUNT];//tabela de analise
-        Production* productions[PROD_MAX];//o id da produção indica a posição no array
+        std::vector<Production*> productions;//o id da produção indica a posição no array
         LexicalAnalyzer* lexical;
 
         void init_table();
@@ -42,6 +42,7 @@ class SyntaticAnalyzer {
         void push_prod(Production* p);
         void print_prod(Production* p);
         Production** make_prod( unsigned int id_base,  N_Term n_term, int hd_count);
+        Category n_term_to_cat(N_Term n);
 
         
 

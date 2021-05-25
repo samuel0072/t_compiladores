@@ -36,7 +36,7 @@ class LexicalAnalyzer {
 
 
         /*Funções e procedimentos*/
-        std::string get_lex(Category c);
+        
         State* op_div_state();
         State* op_add_state();
         State* comp_equal();
@@ -59,6 +59,7 @@ class LexicalAnalyzer {
         LexicalAnalyzer(std::string file);
         Token* nextToken();
         char* get_cat_name(Category c);
+        std::string get_lex(Category c);
         
 };
 
