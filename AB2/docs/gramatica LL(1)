@@ -7,8 +7,8 @@ N' = {
     Value, Type, Init, ParamDef, ArrayAux, 
     OpCoAux, ParamDAux, OpCoBux, OpOrAux, OpAXAux, 
     OpEAux, OpCAux,  OpAddAux,OpMAux, ValueAux, 
-    InitAux, VarList, ParamList, DeclAux, DeclBux, ElseStm,
-    ParamLAux, OpCList
+    InitAux, VarList, ParamList, DeclAux, DeclBux,
+     ElseStm, ParamLAux, OpCList
 }
 
 T = {
@@ -18,7 +18,7 @@ T = {
     '+', '-', '*', '/', '%', '!', 'Id',
     'CteInt', 'CteString', 'CteChar',
     'CteFloat', 'CteBool', 'char', 'int',
-    'float', 'string', 'void', 'bool', 'def',
+    'float', 'string', 'void', 'bool',
     'if', 'else', 'break', 'for', 'while', 'return',
     'input', 'output'
 }
@@ -67,7 +67,7 @@ P' = {
 
 (14)    Stm = VarDecl
 (15)            | 'if' '(' OpConc ')' '{' StmList '}' ElseStm               
-(16)            | 'while' '(' Expr ')' '{' StmList '}' 
+(16)            | 'while' '(' OpConc ')' '{' StmList '}' 
 (17)            | 'for' '(' 'Id' ';' 'Id' ';' 'Id' ';' 'Id' ')' '{' StmList '}' 
 (18)            | NormalStm
 
@@ -79,7 +79,7 @@ P' = {
 (23)            | 'return' OpConc ';'
 (24)            | ';'          
 (25)            | 'input' '(' ParamList ')' ';'
-(26)            | 'output' '('  StringLiteral ',' ParamList ')' ';'    
+(26)            | 'output' '('  'CteString' ',' ParamList ')' ';'    
 
 (27)    VarDecl = Type 'Id' Array Init VarList ';'
 

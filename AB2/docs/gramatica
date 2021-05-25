@@ -15,7 +15,7 @@ T = {
     '+', '-', '*', '/', '%', '!', 'Id',
     'CteInt', 'CteString', 'CteChar',
     'CteFloat', 'CteBool', 'char', 'int',
-    'float', 'string', 'void', 'bool', 'def',
+    'float', 'string', 'void', 'bool',
     'if', 'else', 'break', 'for', 'while', 'return',
     'input', 'output'
 }
@@ -46,8 +46,8 @@ P = {
             | ε
 
     Decl = Type 'Id' Array Init VarList ';'
-        | Type 'Id' '(' ParamDef ')' '{' StmList '}'
-		| Type '[' ']' 'Id' '(' ParamDef ')' '{' StmList '}'
+            | Type 'Id' '(' ParamDef ')' '{' StmList '}'
+		    | Type '[' ']' 'Id' '(' ParamDef ')' '{' StmList '}'
 
     ParamDef = Type Array 'Id' 
             | Type Array 'Id' ',' ParamDef
