@@ -20,7 +20,7 @@ Repositório dedicado à  Implementação de um analisador léxico e sintático 
 
 ## AB2
 
-- Os requisitos da AB1 foram feitos em AB2/
+- Os requisitos da AB2 foram feitos em AB2/
 - O tipo de analisador escolhido foi **Descendente Preditivo Tabular**
 
 - Documentos estão na pasta AB2/docs
@@ -34,3 +34,4 @@ Repositório dedicado à  Implementação de um analisador léxico e sintático 
   - lexicalanalyzer.h: Definição da classe LexicalAnalyzer
   - syntaticanalyzer.cpp: Implementação de funções da classe SyntaticAnalyzer
   - syntaticanalyzer.h: Definição da classe SyntaticAnalyzer
+- Resultados em AB2/resultados
