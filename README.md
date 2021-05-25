@@ -34,3 +34,4 @@ Repositório dedicado à  Implementação de um analisador léxico e sintático 
   - lexicalanalyzer.h: Definição da classe LexicalAnalyzer
   - syntaticanalyzer.cpp: Implementação de funções da classe SyntaticAnalyzer
   - syntaticanalyzer.h: Definição da classe SyntaticAnalyzer
+- Resultados em AB2/resultados
