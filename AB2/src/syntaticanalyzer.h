@@ -24,9 +24,7 @@ n_category é a categoria do não terminal
 */
 struct Production {
     unsigned int id;
-    Prod_types type;
     N_Term n_category;//categoria do não terminal
-    Category lex_category;//caso o tipo seja lexema
     std::vector<int> handle;
 };
 
@@ -43,9 +41,7 @@ class SyntaticAnalyzer {
         void init_stack();
         void push_prod(Production* p);
         void print_prod(Production* p);
-        Production** make_prod( unsigned int id_base, 
-        Prod_types prod_type, N_Term n_term, int hd_count);
-        Production* make_term(Category lex_category);
+        Production** make_prod( unsigned int id_base,  N_Term n_term, int hd_count);
 
     public:
         /*
