@@ -347,3 +347,6 @@ Production** SyntaticAnalyzer::make_prod( unsigned int id_base,  N_Term n_term, 
     return prods; 
 }
 
+void SyntaticAnalyzer::init_stack() {
+    prod_stack.push(N_Term::Decls);
+}
