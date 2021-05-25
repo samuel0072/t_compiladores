@@ -43,6 +43,8 @@ class SyntaticAnalyzer {
         void print_prod(Production* p);
         Production** make_prod( unsigned int id_base,  N_Term n_term, int hd_count);
 
+        
+
     public:
         /*
         * Construtor
@@ -55,5 +57,7 @@ class SyntaticAnalyzer {
         * caso contrário, retorna falso.
         */
         bool Parse(); 
+
+        std::string get_readable(N_Term t);
 };
 #endif

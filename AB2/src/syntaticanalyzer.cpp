@@ -1,5 +1,6 @@
 #include "syntaticanalyzer.h"
 #include <stdlib.h>
+#include <iostream>
 
 SyntaticAnalyzer::SyntaticAnalyzer(std::string file) {
     lexical = new LexicalAnalyzer(file);
@@ -349,4 +350,91 @@ Production** SyntaticAnalyzer::make_prod( unsigned int id_base,  N_Term n_term, 
 
 void SyntaticAnalyzer::init_stack() {
     prod_stack.push(N_Term::Decls);
+}
+
+void SyntaticAnalyzer::push_prod(Production* p) {
+    int quant = p->handle.size();
+    int i;
+
+    for(i = quant-1; i >= 0; i--) {
+        prod_stack.push(p->handle[i]);
+    }
+}
+
+void SyntaticAnalyzer::print_prod(Production* p) {
+    std::cout << p->n_category;
+}
+
+std::string SyntaticAnalyzer::get_readable(N_Term t) {
+    switch(t) {
+        case N_Term::Decls :
+            return "Decls";
+        case N_Term::Decl:
+            return "Decl";
+        case N_Term::DeclAux:
+            return "DeclAux";
+        case N_Term::DeclBux:
+            return "DeclBux";
+        case N_Term::ParamDef:
+            return "ParamDef";
+        case N_Term::StmList:
+            return "StmList";
+        case N_Term::Stm:
+            return "Stm";
+        case N_Term::ElseStm:
+            return "ElseStm";
+        case N_Term::NormalStm:
+            return "NormalStm";
+        case N_Term::VarDecl:
+            return "VarDecl";
+        case N_Term::VarList:
+            return "VarList";
+        case N_Term::Init:
+            return "Init";
+        case N_Term::InitAux:
+            return "InitAux";
+        case N_Term::Array:
+            return "Array";
+        case N_Term::ArrayAux:
+            return "ArrayAux";
+        case N_Term::OpConc:
+            return "OpConc";
+        case N_Term::OpCoAux:
+            return "OpCoAux";
+        case N_Term::OpOr:
+            return "OpOr";
+        case N_Term::OpAndXor:
+            return "OpAndXor";
+        case N_Term::OpOrAux:
+            return "OpOrAux";
+        case N_Term::OpAXAux:
+            return "OpAXAux";
+        case N_Term::OpEquate:
+            return "OpEquate";
+        case N_Term::OpEAux:
+            return "OpEAux";
+        case N_Term::OpCompare:
+            return "OpCompare";
+        case N_Term::OpAdd:
+            return "OpAdd";
+        case N_Term::OpMult:
+            return "OpMult";
+        case N_Term::OpMAux:
+            return "OpMAux";
+        case N_Term::OpUnary:
+            return "OpUnary";
+        case N_Term::Value:
+            return "Value";
+        case N_Term::ValueAux:
+            return "ValueAux";
+        case N_Term::ParamList:
+            return "ParamList";
+        case N_Term::ParamLAux:
+            return "ParamLAux";
+        case N_Term::OpCList:
+            return "OpCList";
+        case N_Term::Type:
+            return "Type";
+        default:
+            return "";
 }
