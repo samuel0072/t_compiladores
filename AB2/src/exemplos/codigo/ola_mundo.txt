@@ -1,0 +1,4 @@
+int main(){
+    output("%s", "Olá mundo!");
+    return 0;
+} a= b;

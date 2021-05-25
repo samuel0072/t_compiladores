@@ -1,0 +1,43 @@
+//
+void shellSort(int vet[], int size){
+
+    int i , j , value;
+    int gap = 1;
+           
+    while(gap < size) {
+        gap = 3*gap+1;
+    }
+
+    while (gap > 0) {
+        for (i, gap, size, 1) {
+            value = vet[i];
+            j = i;
+            while (j > gap-1 and value <= vet[j - gap]) {
+                vet[j] = vet [j - gap];
+                j = j - gap;
+            }
+            vet[j] = value;
+        }
+        gap = gap/3;
+    }
+}
+
+int main(){
+
+    int i, tam;
+
+    input(tam);
+
+    int vet[tam];
+
+    for (i, 0, tam-1, 1){
+        input(vet[i]);
+        output("%d ", vet[i]);
+    }
+
+    shellSort(vet, tam);
+
+    for (i, 0, tam-1, 1){
+        output("%d ", vet[i]);
+    }
+}
