@@ -197,6 +197,142 @@ void SyntaticAnalyzer::init_prods() {
     Type[4]->handle = {N_Term::Void};
     Type[5]->handle = {N_Term::Boolean};
 
+    
+    /*array*/
+
+    productions[0] = Decls[0];
+    productions[1] = Decls[1];
+
+    productions[2] = Decl[0];
+
+    productions[3] = DeclAux[0];
+    productions[4] = DeclAux[1];
+
+    productions[5] = DeclBux[0];
+    productions[6] = DeclBux[1];
+
+    productions[7] = ParamDef[0];
+    productions[8] = ParamDef[1];
+
+    productions[9] = ParamDAux[0];
+    productions[10] = ParamDAux[1];
+
+    productions[11] = StmList[0];
+    productions[12] = StmList[1];
+
+    productions[13] = Stm[0];
+    productions[14] = Stm[1];
+    productions[15] = Stm[2];
+    productions[16] = Stm[3];
+    productions[17] = Stm[4];
+
+    productions[18] = ElseStm[0];
+    productions[19] = ElseStm[1];
+
+    productions[20] = NormalStm[0];
+    productions[21] = NormalStm[1];
+    productions[22] = NormalStm[2];
+    productions[23] = NormalStm[3];
+    productions[24] = NormalStm[4];
+    productions[25] = NormalStm[5];
+
+    productions[26] = VarDecl[0];
+
+    productions[27] = VarList[0];
+    productions[28] = VarList[1];
+
+    productions[29] = Init[0];
+    productions[30] = Init[1];
+
+    productions[31] = InitAux[0];
+    productions[32] = InitAux[1];
+
+    productions[33] = Array[0];
+    productions[34] = Array[1];
+
+    productions[35] = ArrayAux[0];
+    productions[36] = ArrayAux[1];
+
+    productions[37] = OpConc[0];
+    productions[38] = OpConc[1];
+
+    productions[39] = OpCoAux[0];
+    productions[40] = OpCoAux[1];
+    productions[41] = OpCoAux[2];
+
+    productions[42] = OpCoBux[0];
+    productions[43] = OpCoBux[1];
+    productions[44] = OpCoBux[2];
+
+    productions[45] = OpOr[0];
+
+    productions[46] = OpOrAux[0];
+    productions[47] = OpOrAux[1];
+
+    productions[48] = OpAndXor[0];
+
+    productions[49] = OpAXAux[0];
+    productions[50] = OpAXAux[1];
+    productions[51] = OpAXAux[2];
+
+    productions[52] = OpEquate[0];
+
+    productions[53] = OpEAux[0];
+    productions[54] = OpEAux[1];
+    productions[55] = OpEAux[2];
+
+    productions[56] = OpCompare[0];
+
+    productions[57] = OpCAux[0];
+    productions[58] = OpCAux[1];
+    productions[59] = OpCAux[2];
+    productions[60] = OpCAux[3];
+    productions[61] = OpCAux[4];
+
+    productions[62] = OpAdd[0];
+
+    productions[63] = OpAddAux[0];
+    productions[64] = OpAddAux[1];
+    productions[65] = OpAddAux[2];
+
+    productions[66] = OpMult[0];
+
+    productions[67] = OpMAux[0];
+    productions[68] = OpMAux[1];
+    productions[69] = OpMAux[2];
+    productions[70] = OpMAux[4];
+
+    productions[71] = OpUnary[0];
+    productions[72] = OpUnary[1];
+    productions[73] = OpUnary[2];
+    productions[74] = OpUnary[3];
+
+    productions[75] = Value[0];
+    productions[76] = Value[1];
+    productions[77] = Value[2];
+    productions[78] = Value[3];
+    productions[79] = Value[4];
+    productions[80] = Value[5];
+
+    productions[81] = ValueAux[0];
+    productions[82] = ValueAux[1];
+
+    productions[83] = ParamList[0];
+    productions[84] = ParamList[1];
+
+    productions[85] = ParamLAux[0];
+    productions[86] = ParamLAux[1];
+
+    productions[87] = OpCList[0];
+    productions[88] = OpCList[1];
+
+    productions[89] = Type[0];
+    productions[90] = Type[1];
+    productions[91] = Type[2];
+    productions[92] = Type[3];
+    productions[93] = Type[4];
+    productions[94] = Type[5];
+
 }
 
 Production** SyntaticAnalyzer::make_prod( unsigned int id_base,  N_Term n_term, int hd_count) {

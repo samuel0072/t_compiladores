@@ -33,7 +33,7 @@ class SyntaticAnalyzer {
     private:
         std::stack<int> prod_stack;//pilha 
         unsigned int analysis_table[N_TERM_COUNT][TOKEN_COUNT];//tabela de analise
-        Production* productions[PROD_MAX + TOKEN_COUNT + ERROR_COUNT];//o id da produção indica a posição no array
+        Production* productions[PROD_MAX];//o id da produção indica a posição no array
         LexicalAnalyzer* lexical;
 
         void init_table();
