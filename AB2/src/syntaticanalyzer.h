@@ -6,7 +6,7 @@
 #include <stack>
 
 #define N_TERM_COUNT 38 //Quantidade de não terminais da gramatica LL(1)
-#define PROD_MAX 95//Quandtidade de produções da gramatica LL(1)
+#define PROD_MAX 96//Quandtidade de produções da gramatica LL(1)
 #define TOKEN_COUNT 47 //Quantidade de tokens definidos em category.h
 #define ERROR_COUNT 6 //Quantidade de erros identificados na tabela de análise 
 #define OFF_SET 39

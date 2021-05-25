@@ -48,11 +48,11 @@ void SyntaticAnalyzer::init_prods() {
     Production** OpMAux = make_prod(68, N_Term::OpMAux, 4);
     Production** OpUnary = make_prod(72, N_Term::OpUnary, 4);
     Production** Value = make_prod(76, N_Term::Value, 6);
-    Production** ValueAux = make_prod(82, N_Term::ValueAux, 2);
+    Production** ValueAux = make_prod(82, N_Term::ValueAux, 3);
     Production** ParamList = make_prod(84, N_Term::ParamList, 2);
-    Production** ParamLAux = make_prod(86, N_Term::ParamLAux, 2);
-    Production** OpCList = make_prod(88, N_Term::OpCList, 2);
-    Production** Type = make_prod(90, N_Term::Type, 6);
+    Production** ParamLAux = make_prod(87, N_Term::ParamLAux, 2);
+    Production** OpCList = make_prod(89, N_Term::OpCList, 2);
+    Production** Type = make_prod(91, N_Term::Type, 6);
 
     /*Regras de produção*/
     
@@ -180,7 +180,8 @@ void SyntaticAnalyzer::init_prods() {
     Value[5]->handle.insert(Value[5]->handle.end(), {N_Term::TId, N_Term::ValueAux});
     
     ValueAux[0]->handle.insert(ValueAux[0]->handle.end(), {N_Term::TParenth1, N_Term::ParamList, N_Term::TParenth2});
-    ValueAux[1]->handle.insert(ValueAux[1]->handle.end(), {N_Term::Empty});
+    ValueAux[1]->handle.insert(ValueAux[1]->handle.end(), {N_Term::TBracket1, N_Term::OpConc, N_Term::TBracket2});
+    ValueAux[2]->handle.insert(ValueAux[2]->handle.end(), {N_Term::Empty});
 
     ParamList[0]->handle.insert(ParamList[0]->handle.end(), {N_Term::TId, N_Term::ParamLAux});
     ParamList[1]->handle.insert(ParamList[1]->handle.end(), {N_Term::Empty});
@@ -318,6 +319,7 @@ void SyntaticAnalyzer::init_prods() {
 
     productions.push_back(ValueAux[0]);
     productions.push_back(ValueAux[1]);
+    productions.push_back(ValueAux[2]);
 
     productions.push_back(ParamList[0]);
     productions.push_back(ParamList[1]);
@@ -760,43 +762,44 @@ void SyntaticAnalyzer::init_table() {
     analysis_table[N_Term::Value][Category::Id] = 80;
 
     analysis_table[N_Term::ValueAux][Category::Parenth1] = 81;
-    analysis_table[N_Term::ValueAux][Category::Parenth2] = 82;
-    analysis_table[N_Term::ValueAux][Category::Braces2] = 82;
-    analysis_table[N_Term::ValueAux][Category::Bracket2] = 82;
-    analysis_table[N_Term::ValueAux][Category::OpAdd] = 82;
-    analysis_table[N_Term::ValueAux][Category::OpMinus] = 82;
-    analysis_table[N_Term::ValueAux][Category::OpMult] = 82;
-    analysis_table[N_Term::ValueAux][Category::OpDiv] = 82;
-    analysis_table[N_Term::ValueAux][Category::OpRem] = 82;
-    analysis_table[N_Term::ValueAux][Category::OpConcat] = 82;
-    analysis_table[N_Term::ValueAux][Category::OpLesser] = 82;
-    analysis_table[N_Term::ValueAux][Category::OpGreater] = 82;
-    analysis_table[N_Term::ValueAux][Category::OpLEqual] = 82;
-    analysis_table[N_Term::ValueAux][Category::OpGEqual] = 82;
-    analysis_table[N_Term::ValueAux][Category::OpEqual] = 82;
-    analysis_table[N_Term::ValueAux][Category::OpDiff] = 82;
-    analysis_table[N_Term::ValueAux][Category::OpBinXor] = 82;
-    analysis_table[N_Term::ValueAux][Category::OpAnd] = 82;
-    analysis_table[N_Term::ValueAux][Category::OpOr] = 82;
-    analysis_table[N_Term::ValueAux][Category::Assign] = 82;
-    analysis_table[N_Term::ValueAux][Category::Comma] = 82;
-    analysis_table[N_Term::ValueAux][Category::Terminator] = 82;
+    analysis_table[N_Term::ValueAux][Category::Parenth2] = 83;
+    analysis_table[N_Term::ValueAux][Category::Braces2] = 83;
+    analysis_table[N_Term::ValueAux][Category::Bracket1] = 82;
+    analysis_table[N_Term::ValueAux][Category::Bracket2] = 83;
+    analysis_table[N_Term::ValueAux][Category::OpAdd] = 83;
+    analysis_table[N_Term::ValueAux][Category::OpMinus] = 83;
+    analysis_table[N_Term::ValueAux][Category::OpMult] = 83;
+    analysis_table[N_Term::ValueAux][Category::OpDiv] = 83;
+    analysis_table[N_Term::ValueAux][Category::OpRem] = 83;
+    analysis_table[N_Term::ValueAux][Category::OpConcat] = 83;
+    analysis_table[N_Term::ValueAux][Category::OpLesser] = 83;
+    analysis_table[N_Term::ValueAux][Category::OpGreater] = 83;
+    analysis_table[N_Term::ValueAux][Category::OpLEqual] = 83;
+    analysis_table[N_Term::ValueAux][Category::OpGEqual] = 83;
+    analysis_table[N_Term::ValueAux][Category::OpEqual] = 83;
+    analysis_table[N_Term::ValueAux][Category::OpDiff] = 83;
+    analysis_table[N_Term::ValueAux][Category::OpBinXor] = 83;
+    analysis_table[N_Term::ValueAux][Category::OpAnd] = 83;
+    analysis_table[N_Term::ValueAux][Category::OpOr] = 83;
+    analysis_table[N_Term::ValueAux][Category::Assign] = 83;
+    analysis_table[N_Term::ValueAux][Category::Comma] = 83;
+    analysis_table[N_Term::ValueAux][Category::Terminator] = 83;
 
-    analysis_table[N_Term::ParamList][Category::Parenth2] = 84;
-    analysis_table[N_Term::ParamList][Category::Id] = 83;
+    analysis_table[N_Term::ParamList][Category::Parenth2] = 85;
+    analysis_table[N_Term::ParamList][Category::Id] = 84;
 
-    analysis_table[N_Term::ParamLAux][Category::Parenth2] = 86;
-    analysis_table[N_Term::ParamLAux][Category::Comma] = 85;
+    analysis_table[N_Term::ParamLAux][Category::Parenth2] = 87;
+    analysis_table[N_Term::ParamLAux][Category::Comma] = 86;
 
-    analysis_table[N_Term::OpCList][Category::Braces2] = 88;
-    analysis_table[N_Term::OpCList][Category::Comma] = 87;
+    analysis_table[N_Term::OpCList][Category::Braces2] = 89;
+    analysis_table[N_Term::OpCList][Category::Comma] = 88;
 
-    analysis_table[N_Term::Type][Category::Char] = 89;
-    analysis_table[N_Term::Type][Category::Integer] = 90;
-    analysis_table[N_Term::Type][Category::Float] = 91;
-    analysis_table[N_Term::Type][Category::String] = 92;
-    analysis_table[N_Term::Type][Category::Void] = 93;
-    analysis_table[N_Term::Type][Category::Boolean] = 94;
+    analysis_table[N_Term::Type][Category::Char] = 90;
+    analysis_table[N_Term::Type][Category::Integer] = 91;
+    analysis_table[N_Term::Type][Category::Float] = 92;
+    analysis_table[N_Term::Type][Category::String] = 93;
+    analysis_table[N_Term::Type][Category::Void] = 94;
+    analysis_table[N_Term::Type][Category::Boolean] = 95;
 }
 
 bool SyntaticAnalyzer::Parse() {
