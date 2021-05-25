@@ -13,7 +13,13 @@ int main(int argc, char * argv[]) {
 
     
 
-    sint.Parse();
+    bool acp = sint.Parse();
+    /*if(acp) {
+        std::cout << "Programa aceito!";
+    }
+    else {
+        std::cout << "Programa recusado!";
+    }*/
     
     
 

@@ -17,7 +17,7 @@ T = {
     'CteFloat', 'CteBool', 'char', 'int',
     'float', 'string', 'void', 'bool',
     'if', 'else', 'break', 'for', 'while', 'return',
-    'input', 'output'
+    'input', 'output', OutputList
 }
 
 Categ = ER: {
@@ -49,8 +49,8 @@ P = {
             | Type 'Id' '(' ParamDef ')' '{' StmList '}'
 		    | Type '[' ']' 'Id' '(' ParamDef ')' '{' StmList '}'
 
-    ParamDef = Type Array 'Id' 
-            | Type Array 'Id' ',' ParamDef
+    ParamDef = Type 'Id' Array
+            | Type 'Id' Array ',' ParamDef
             | ε
 
     StmList = Stm StmList 
@@ -60,7 +60,7 @@ P = {
             | 'if' '(' OpConc ')' '{' StmList '}'          
             | 'if' '(' OpConc ')' '{' StmList '}' 'else' '{' StmList '}'         
             | 'while' '(' OpConc ')' '{' StmList '}' 
-            | 'for' '(' 'Id' ';' 'Id' ';' 'Id' ';' 'Id' ')' '{' StmList '}' 
+            | 'for' '(' 'Id' ',' 'Id' ',' 'Id' ',' 'Id' ')' '{' StmList '}' 
             | NormalStm
 
     NormalStm =  OpConc ';'
@@ -137,17 +137,18 @@ P = {
     ParamList = 'Id' ParamLAux 
             |  ε
 	
-	ParamLAux = ',' 'Id' ParamLAux
+    ParamLAux = ',' 'Id' ParamLAux
             | ε
-	
-	OpCList = ',' OpConc OpCList
+
+    OpCList = ',' OpConc OpCList
             | ε
-    
-	Type = 'char'
+
+    Type = 'char'
             | 'int'
             | 'float'
             | 'string'
             | 'void'
             | 'bool'    
-
+    OutputList = ',' ParamList
+           | ε
 }

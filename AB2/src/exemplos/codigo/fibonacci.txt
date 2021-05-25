@@ -2,8 +2,8 @@ int fibonacci(int valor_limite){//comentario
     int a, b, aux;
 
     if(valor_limite >= 0){
-
-        output("%d", "0");
+        int d = 0;
+        output("%d", d);
 
         a = 0;
         b = 1;

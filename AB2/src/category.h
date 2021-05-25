@@ -39,7 +39,7 @@ enum N_Term {
    OpOrAux, OpAndXor, OpAXAux, OpEquate, OpEAux,
    OpCompare, OpCAux, NOpAdd, OpAddAux, NOpMult,
    OpMAux, OpUnary, Value, ValueAux, ParamList,
-   ParamLAux, OpCList, Type, Empty,
+   ParamLAux, OpCList, Type, OutputList, Empty,
    TCtrlIf, TCtrlElse, TLoopWhile, TLoopFor,  TBreak,
    TReturn, TInput, TOutput, TInteger, TFloat, TChar, TVoid,TString, TBoolean, 
    TParenth1, TParenth2, TBraces1,TBraces2, TBracket1, TBracket2, TOpAdd, 

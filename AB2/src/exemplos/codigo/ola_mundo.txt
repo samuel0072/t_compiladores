@@ -1,4 +1,5 @@
 int main(){
-    output("%s", "Olá mundo!");
+    string a = "Olá mundo!";
+    output("%s", a);
     return 0;
-} a= b;
+}

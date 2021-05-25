@@ -7,7 +7,7 @@ SyntaticAnalyzer::SyntaticAnalyzer(std::string file) {
     lexical = new LexicalAnalyzer(file);
     init_prods();
     init_table();
-    init_stack();
+    
 }
 
 void SyntaticAnalyzer::init_prods() {
@@ -53,6 +53,7 @@ void SyntaticAnalyzer::init_prods() {
     Production** ParamLAux = make_prod(87, N_Term::ParamLAux, 2);
     Production** OpCList = make_prod(89, N_Term::OpCList, 2);
     Production** Type = make_prod(91, N_Term::Type, 6);
+    Production** OutputList = make_prod(97, N_Term::OutputList, 2);
 
     /*Regras de produção*/
     
@@ -70,10 +71,10 @@ void SyntaticAnalyzer::init_prods() {
     DeclBux[1]->handle.insert(DeclBux[1]->handle.end(), {N_Term::TParenth1, N_Term::ParamDef, N_Term::TParenth2, 
     N_Term::TBraces1, N_Term::StmList, N_Term::TBraces2});
 
-    ParamDef[0]->handle.insert(ParamDef[0]->handle.end(), { N_Term::Type, N_Term::Array, N_Term::TId, N_Term::ParamDAux});
+    ParamDef[0]->handle.insert(ParamDef[0]->handle.end(), { N_Term::Type, N_Term::TId, N_Term::Array, N_Term::ParamDAux});
     ParamDef[1]->handle.insert(ParamDef[1]->handle.end(), { N_Term::Empty });
 
-    ParamDAux[0]->handle.insert(ParamDAux[0]->handle.end(), {N_Term::TComma, N_Term::Type, N_Term::Array, N_Term::TId,N_Term::ParamDAux});
+    ParamDAux[0]->handle.insert(ParamDAux[0]->handle.end(), {N_Term::TComma, N_Term::Type,  N_Term::TId, N_Term::Array, N_Term::ParamDAux});
     ParamDAux[1]->handle.insert(ParamDAux[1]->handle.end(), {N_Term::Empty});
 
     StmList[0]->handle.insert(StmList[0]->handle.end(), {N_Term::Stm, N_Term::StmList});
@@ -83,10 +84,10 @@ void SyntaticAnalyzer::init_prods() {
     Stm[1]->handle.insert(Stm[1]->handle.end(), {N_Term::TCtrlIf, N_Term::TParenth1, N_Term::OpConc, N_Term::TParenth2,N_Term::TBraces1, N_Term::StmList, N_Term::TBraces2});
     Stm[2]->handle.insert(Stm[2]->handle.end(), {N_Term::TLoopWhile, N_Term::TParenth1, N_Term::OpConc, N_Term::TParenth2,N_Term::TBraces1, N_Term::StmList, N_Term::TBraces2});
     Stm[3]->handle.insert(Stm[3]->handle.end(), {N_Term::TLoopFor, N_Term::TParenth1,
-        N_Term::TId,N_Term::TTerminator,
-        N_Term::TId,N_Term::TTerminator,
-        N_Term::TId,N_Term::TTerminator,
-        N_Term::TId,N_Term::TTerminator ,N_Term::TParenth2,N_Term::TBraces1, N_Term::StmList, N_Term::TBraces2});
+        N_Term::TId,N_Term::TComma,
+        N_Term::TId,N_Term::TComma,
+        N_Term::TId,N_Term::TComma,
+        N_Term::TId,N_Term::TParenth2,N_Term::TBraces1, N_Term::StmList, N_Term::TBraces2});
     Stm[4]->handle.insert(Stm[4]->handle.end(), {N_Term::NormalStm});
     
     ElseStm[0]->handle.insert(ElseStm[0]->handle.end(), {N_Term::TCtrlElse, N_Term::TBraces1, N_Term::StmList, N_Term::TBraces2});
@@ -98,7 +99,7 @@ void SyntaticAnalyzer::init_prods() {
     NormalStm[3]->handle.insert(NormalStm[3]->handle.end(), { N_Term::TTerminator});
     NormalStm[4]->handle.insert(NormalStm[4]->handle.end(), {N_Term::TInput, N_Term::TParenth1, N_Term::ParamList, N_Term::TParenth2,N_Term::TTerminator});
     NormalStm[5]->handle.insert(NormalStm[5]->handle.end(), {N_Term::TOutput, N_Term::TParenth1, 
-    N_Term::TCteString, N_Term::TComma, N_Term::ParamList,
+    N_Term::TCteString, N_Term::OutputList,
     N_Term::TParenth2,N_Term::TTerminator});
 
     VarDecl[0]->handle.insert(VarDecl[0]->handle.end(), { N_Term::Type,  N_Term::TId,N_Term::Array, N_Term::NInit, N_Term::VarList, N_Term::TTerminator});
@@ -157,7 +158,7 @@ void SyntaticAnalyzer::init_prods() {
     OpAdd[0]->handle.insert(OpAdd[0]->handle.end(), {N_Term::NOpMult, N_Term::OpAddAux});
 
     OpAddAux[0]->handle.insert(OpAddAux[0]->handle.end(), {N_Term::TOpAdd, N_Term::NOpMult, N_Term::OpAddAux});
-    OpAddAux[1]->handle.insert(OpAddAux[1]->handle.end(), {N_Term::TOpMult,  N_Term::NOpMult, N_Term::OpAddAux});
+    OpAddAux[1]->handle.insert(OpAddAux[1]->handle.end(), {N_Term::TOpMinus,  N_Term::NOpMult, N_Term::OpAddAux});
     OpAddAux[2]->handle.insert(OpAddAux[2]->handle.end(), {N_Term::Empty});
 
     OpMult[0]->handle.insert(OpMult[0]->handle.end(), {N_Term::OpUnary, N_Term::OpMAux});
@@ -198,6 +199,9 @@ void SyntaticAnalyzer::init_prods() {
     Type[3]->handle.insert(Type[3]->handle.end(), {N_Term::TString});
     Type[4]->handle.insert(Type[4]->handle.end(), {N_Term::TVoid});
     Type[5]->handle.insert(Type[5]->handle.end(), {N_Term::TBoolean});
+
+    OutputList[0]->handle.insert(OutputList[0]->handle.end(), {N_Term::TComma, N_Term::ParamList});
+    OutputList[1]->handle.insert(OutputList[1]->handle.end(), {N_Term::Empty});
     
 
     
@@ -303,7 +307,7 @@ void SyntaticAnalyzer::init_prods() {
     productions.push_back(OpMAux[0]);
     productions.push_back(OpMAux[1]);
     productions.push_back(OpMAux[2]);
-    productions.push_back(OpMAux[4]);
+    productions.push_back(OpMAux[3]);
 
     productions.push_back(OpUnary[0]);
     productions.push_back(OpUnary[1]);
@@ -337,6 +341,9 @@ void SyntaticAnalyzer::init_prods() {
     productions.push_back(Type[4]);
     productions.push_back(Type[5]);
 
+    productions.push_back(OutputList[0]);
+    productions.push_back(OutputList[1]);
+
 }
 
 Production** SyntaticAnalyzer::make_prod( unsigned int id_base,  N_Term n_term, int hd_count) {
@@ -358,14 +365,28 @@ void SyntaticAnalyzer::init_stack() {
 void SyntaticAnalyzer::push_prod(Production* p) {
     int quant = p->handle.size();
     int i;
-
+    
     for(i = quant-1; i >= 0; i--) {
         prod_stack.push(p->handle[i]);
     }
 }
 
+void SyntaticAnalyzer::print_stack() {
+    while(!prod_stack.empty()) {
+        N_Term top = prod_stack.top();
+        if(top > N_Term::Empty) {
+            std::cout << get_cat_readable(n_term_to_cat(top)) << " ";
+        }
+        else {
+            std::cout << get_readable(top) << " ";
+        }
+        prod_stack.pop();
+    }
+    
+}
+
 void SyntaticAnalyzer::print_prod(Production* p) {
-    std::cout << get_readable(p->n_category) << " = ";
+    std::cout << "          "<< get_readable(p->n_category) << " = ";
     
     int quant = p->handle.size();
     int i;
@@ -382,6 +403,15 @@ void SyntaticAnalyzer::print_prod(Production* p) {
 }
 
 void SyntaticAnalyzer::init_table() {
+
+    int i, j;
+
+    for(i = 0; i < N_TERM_COUNT; i++) {
+        for(j = 0; j < TOKEN_COUNT; j++) {
+            analysis_table[i][j] = ERROR;//Inicia como erro
+        }
+    }
+
     analysis_table[N_Term::Decls][Category::Char] = 0;
     analysis_table[N_Term::Decls][Category::Integer] = 0;
     analysis_table[N_Term::Decls][Category::Float] = 0;
@@ -542,6 +572,7 @@ void SyntaticAnalyzer::init_table() {
     analysis_table[N_Term::Array][Category::Bracket1] = 33;
     analysis_table[N_Term::Array][Category::Assign] = 34;
     analysis_table[N_Term::Array][Category::Comma] = 34;
+    analysis_table[N_Term::Array][Category::Parenth2] = 34;
     analysis_table[N_Term::Array][Category::Terminator] = 34;
     
     analysis_table[N_Term::ArrayAux][Category::Parenth1] = 35;
@@ -800,12 +831,77 @@ void SyntaticAnalyzer::init_table() {
     analysis_table[N_Term::Type][Category::String] = 93;
     analysis_table[N_Term::Type][Category::Void] = 94;
     analysis_table[N_Term::Type][Category::Boolean] = 95;
+
+    analysis_table[N_Term::OutputList][Category::Comma] = 96;
+    analysis_table[N_Term::OutputList][Category::Parenth2] = 97;
 }
 
 bool SyntaticAnalyzer::Parse() {
+    init_stack();
+    Token* tk = lexical->nextToken();
 
-    Production* p = productions[25];
-    print_prod(p);
+    while(true) {
+        if(tk->cat == Category::Error) {
+                //Reconheceu um lexema inválido
+                std::cout << "Erro: Token inválido:";
+                printf("              [%04d, %04d] (%04d, %20s) ",
+                tk->line, tk->col, tk->cat, lexical->get_cat_name(tk->cat));
+                std::cout << "{" + tk->lex + "}\n";
+                return false;
+            }
+        else if(prod_stack.empty() && tk->cat == Category::Eof) {
+            //pilha vazia e EOF na entrada
+            return true;
+        }
+        N_Term s_top = prod_stack.top();
+        prod_stack.pop();//desempilha
+
+        if(s_top > N_Term::Empty) {
+            //Não terminal no topo da pilha
+            Category c = n_term_to_cat(s_top);
+            if(c == tk->cat) {
+                //houve o reconhecimento do não terminal
+                printf("              [%04d, %04d] (%04d, %20s) ",
+                tk->line, tk->col, tk->cat, lexical->get_cat_name(tk->cat));
+                std::cout << "{" + tk->lex + "}\n";
+
+                tk = lexical->nextToken();//Lê o próximo token
+            }
+            else {
+                std::cout << "Erro de analise:";
+                return false;
+            }
+        }
+        else if(s_top == N_Term::Empty){
+            //Produção vazia ele desempilha
+            //std::cout << " Desempilhou";
+        }
+        else {
+            //Escolhe a produção do não terminal no topo da pilha e o token na entrada
+            //std::cout << " Empilhou";
+            //std::cout << s_top << " " << tk->cat;
+            int index = analysis_table[s_top][tk->cat];
+            if(index == ERROR) {
+                std::cout << "Erro de sintaxe ao ler:";
+                printf("              [%04d, %04d] (%04d, %20s) ",
+                tk->line, tk->col, tk->cat, lexical->get_cat_name(tk->cat));
+                std::cout << "{" + tk->lex + "}\n";
+                return false;
+            }
+            Production* p = productions[index];
+
+            
+            push_prod(p);
+            print_prod(p);
+            
+            
+        }
+    }
+    
+    /*Production* p = productions[analysis_table[N_Term::ElseStm][CtrlElse]];
+    push_prod(p);
+    print_stack();
+    print_prod(p);*/
     return true;
 }
 
@@ -862,8 +958,12 @@ std::string SyntaticAnalyzer::get_readable(N_Term t) {
             return "OpEAux";
         case N_Term::OpCompare:
             return "OpCompare";
+        case N_Term::OpCAux:
+            return "OpCAux";
         case N_Term::NOpAdd:
             return "OpAdd";
+        case N_Term::OpAddAux:
+            return "OpAddAux";
         case N_Term::NOpMult:
             return "OpMult";
         case N_Term::OpMAux:
@@ -909,7 +1009,7 @@ std::string SyntaticAnalyzer::get_cat_readable(Category c) {
         case Category::Output:
             return "'output'";
         case Category::Integer:
-            return "'intr'";
+            return "'int'";
         case Category::Float:
             return "'float'";
         case Category::Char:

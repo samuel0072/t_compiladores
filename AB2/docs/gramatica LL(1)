@@ -20,7 +20,7 @@ T = {
     'CteFloat', 'CteBool', 'char', 'int',
     'float', 'string', 'void', 'bool',
     'if', 'else', 'break', 'for', 'while', 'return',
-    'input', 'output'
+    'input', 'output', OutputList
 }
 
 Categ = ER: {
@@ -56,10 +56,10 @@ P' = {
 ( 6)    DeclBux = Array Init VarList ';'
 ( 7)             | '(' ParamDef ')' '{' StmList '}'        
 
-( 8)    ParamDef = Type Array 'Id' ParamDAux
+( 8)    ParamDef = Type  'Id' Array ParamDAux
 ( 9)            | ε
 
-(10)    ParamDAux = ',' Type Array 'Id' ParamDAux
+(10)    ParamDAux = ',' Type 'Id' Array ParamDAux
 (11)            | ε
 
 (12)    StmList = Stm StmList 
@@ -68,7 +68,7 @@ P' = {
 (14)    Stm = VarDecl
 (15)            | 'if' '(' OpConc ')' '{' StmList '}' ElseStm               
 (16)            | 'while' '(' OpConc ')' '{' StmList '}' 
-(17)            | 'for' '(' 'Id' ';' 'Id' ';' 'Id' ';' 'Id' ')' '{' StmList '}' 
+(17)            | 'for' '(' 'Id' ',' 'Id' ',' 'Id' ',' 'Id' ')' '{' StmList '}' 
 (18)            | NormalStm
 
 (19)    ElseStm = 'else' '{' StmList '}' 
@@ -79,7 +79,7 @@ P' = {
 (23)            | 'return' OpConc ';'
 (24)            | ';'          
 (25)            | 'input' '(' ParamList ')' ';'
-(26)            | 'output' '('  'CteString' ',' ParamList ')' ';'    
+(26)            | 'output' '('  'CteString' OutputList ')' ';'    
 
 (27)    VarDecl = Type 'Id' Array Init VarList ';'
 
@@ -177,5 +177,8 @@ P' = {
 (93)            | 'float'
 (94)            | 'string'
 (95)            | 'void'
-(96)            | 'bool'          
+(96)            | 'bool'      
+
+(97) OutputList = ',' ParamList
+(98)            | ε
 }

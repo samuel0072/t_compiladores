@@ -5,11 +5,12 @@
 #include <string>
 #include <stack>
 
-#define N_TERM_COUNT 38 //Quantidade de não terminais da gramatica LL(1)
+#define N_TERM_COUNT 39 //Quantidade de não terminais da gramatica LL(1)
 #define PROD_MAX 96//Quandtidade de produções da gramatica LL(1)
 #define TOKEN_COUNT 47 //Quantidade de tokens definidos em category.h
 #define ERROR_COUNT 6 //Quantidade de erros identificados na tabela de análise 
 #define OFF_SET 39
+#define ERROR -1
 typedef struct Production Production;
 
 /*
@@ -32,7 +33,7 @@ struct Production {
 class SyntaticAnalyzer {
     private:
         std::stack<N_Term> prod_stack;//pilha 
-        unsigned int analysis_table[N_TERM_COUNT][TOKEN_COUNT];//tabela de analise
+        int analysis_table[N_TERM_COUNT][TOKEN_COUNT];//tabela de analise
         std::vector<Production*> productions;//produções na ordem que aparecem na gramatica LL(1)
         LexicalAnalyzer* lexical;
 
@@ -44,6 +45,7 @@ class SyntaticAnalyzer {
         Production** make_prod( unsigned int id_base,  N_Term n_term, int hd_count);
         Category n_term_to_cat(N_Term n);
         std::string get_cat_readable(Category c);
+        void print_stack();
 
         
 
