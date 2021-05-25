@@ -33,7 +33,7 @@ class SyntaticAnalyzer {
     private:
         std::stack<N_Term> prod_stack;//pilha 
         unsigned int analysis_table[N_TERM_COUNT][TOKEN_COUNT];//tabela de analise
-        std::vector<Production*> productions;//o id da produção indica a posição no array
+        std::vector<Production*> productions;//produções na ordem que aparecem na gramatica LL(1)
         LexicalAnalyzer* lexical;
 
         void init_table();
@@ -43,6 +43,7 @@ class SyntaticAnalyzer {
         void print_prod(Production* p);
         Production** make_prod( unsigned int id_base,  N_Term n_term, int hd_count);
         Category n_term_to_cat(N_Term n);
+        std::string get_cat_readable(Category c);
 
         
 

@@ -6,7 +6,7 @@
 SyntaticAnalyzer::SyntaticAnalyzer(std::string file) {
     lexical = new LexicalAnalyzer(file);
     init_prods();
-    //init_table();
+    init_table();
     init_stack();
 }
 
@@ -15,7 +15,7 @@ void SyntaticAnalyzer::init_prods() {
     /*
     * Não terminais
     */
-    Production** Decls = make_prod( 1, N_Term::Decls, 2);
+    Production** Decls = make_prod(1, N_Term::Decls, 2);
     Production** Decl = make_prod( 3, N_Term::Decl, 1);
     Production** DeclAux = make_prod( 4, N_Term::DeclAux, 2);
     Production** DeclBux = make_prod( 6, N_Term::DeclBux, 2);
@@ -370,7 +370,7 @@ void SyntaticAnalyzer::print_prod(Production* p) {
     
     for(i = 0; i < quant; i++) {
         if(p->handle[i] > N_Term::Empty) {
-            std::cout << lexical->get_lex(n_term_to_cat(p->handle[i])) << " ";
+            std::cout << get_cat_readable(n_term_to_cat(p->handle[i])) << " ";
         }
         else {
             std::cout << get_readable(p->handle[i]) << " ";
@@ -379,9 +379,429 @@ void SyntaticAnalyzer::print_prod(Production* p) {
     std::cout << "\n";
 }
 
+void SyntaticAnalyzer::init_table() {
+    analysis_table[N_Term::Decls][Category::Char] = 0;
+    analysis_table[N_Term::Decls][Category::Integer] = 0;
+    analysis_table[N_Term::Decls][Category::Float] = 0;
+    analysis_table[N_Term::Decls][Category::String] = 0;
+    analysis_table[N_Term::Decls][Category::Void] = 0;
+    analysis_table[N_Term::Decls][Category::Boolean] = 0;
+    analysis_table[N_Term::Decls][Category::Eof] = 1;
+
+    analysis_table[N_Term::Decl][Category::Char] = 2;
+    analysis_table[N_Term::Decl][Category::Integer] = 2;
+    analysis_table[N_Term::Decl][Category::Float] = 2;
+    analysis_table[N_Term::Decl][Category::String] = 2;
+    analysis_table[N_Term::Decl][Category::Void] = 2;
+    analysis_table[N_Term::Decl][Category::Boolean] = 2;
+
+    
+    analysis_table[N_Term::DeclAux][Category::Bracket1] = 4;
+    analysis_table[N_Term::DeclAux][Category::Id] = 3;
+
+    analysis_table[N_Term::DeclBux][Category::Parenth1] = 6;
+    analysis_table[N_Term::DeclBux][Category::Bracket1] = 5;
+    analysis_table[N_Term::DeclBux][Category::Assign] = 6;
+    analysis_table[N_Term::DeclBux][Category::Comma] = 6;
+    
+    analysis_table[N_Term::ParamDef][Category::Char] = 7;
+    analysis_table[N_Term::ParamDef][Category::Integer] = 7;
+    analysis_table[N_Term::ParamDef][Category::Float] = 7;
+    analysis_table[N_Term::ParamDef][Category::String] = 7;
+    analysis_table[N_Term::ParamDef][Category::Void] = 7;
+    analysis_table[N_Term::ParamDef][Category::Boolean] = 7;
+    analysis_table[N_Term::ParamDef][Category::Parenth2] = 8;
+
+    analysis_table[N_Term::ParamDAux][Category::Parenth2] = 10;
+    analysis_table[N_Term::ParamDAux][Category::Comma] = 9;
+
+    analysis_table[N_Term::StmList][Category::CtrlIf] = 11;
+    analysis_table[N_Term::StmList][Category::LoopWhile] = 11;
+    analysis_table[N_Term::StmList][Category::LoopFor] = 11;
+    analysis_table[N_Term::StmList][Category::Break] = 11;
+    analysis_table[N_Term::StmList][Category::Return] = 11;
+    analysis_table[N_Term::StmList][Category::Input] = 11;
+    analysis_table[N_Term::StmList][Category::Output] = 11;
+    analysis_table[N_Term::StmList][Category::Char] = 11;
+    analysis_table[N_Term::StmList][Category::Integer] = 11;
+    analysis_table[N_Term::StmList][Category::Float] = 11;
+    analysis_table[N_Term::StmList][Category::String] = 11;
+    analysis_table[N_Term::StmList][Category::Void] = 11;
+    analysis_table[N_Term::StmList][Category::Boolean] = 11;
+    analysis_table[N_Term::StmList][Category::Parenth1] = 11;
+    analysis_table[N_Term::StmList][Category::Braces2] = 12;
+    analysis_table[N_Term::StmList][Category::OpAdd] = 11;
+    analysis_table[N_Term::StmList][Category::OpMinus] = 11;
+    analysis_table[N_Term::StmList][Category::OpNot] = 11;
+    analysis_table[N_Term::StmList][Category::Terminator] = 11;
+    analysis_table[N_Term::StmList][Category::CteInt] = 11;
+    analysis_table[N_Term::StmList][Category::CteString] = 11;
+    analysis_table[N_Term::StmList][Category::CteChar] = 11;
+    analysis_table[N_Term::StmList][Category::CteFloat] = 11;
+    analysis_table[N_Term::StmList][Category::CteBool] = 11;
+    analysis_table[N_Term::StmList][Category::Id] = 11;
+
+    analysis_table[N_Term::Stm][Category::CtrlIf] = 14;
+    analysis_table[N_Term::Stm][Category::LoopWhile] = 15;
+    analysis_table[N_Term::Stm][Category::LoopFor] = 16;
+    analysis_table[N_Term::Stm][Category::Break] = 17;
+    analysis_table[N_Term::Stm][Category::Return] = 17;
+    analysis_table[N_Term::Stm][Category::Input] = 17;
+    analysis_table[N_Term::Stm][Category::Output] = 17;
+    analysis_table[N_Term::Stm][Category::Char] = 13;
+    analysis_table[N_Term::Stm][Category::Integer] = 13;
+    analysis_table[N_Term::Stm][Category::Float] = 13;
+    analysis_table[N_Term::Stm][Category::String] = 13;
+    analysis_table[N_Term::Stm][Category::Void] = 13;
+    analysis_table[N_Term::Stm][Category::Boolean] = 13;
+    analysis_table[N_Term::Stm][Category::Parenth1] = 17;
+    analysis_table[N_Term::Stm][Category::OpAdd] = 17;
+    analysis_table[N_Term::Stm][Category::OpMinus] = 17;
+    analysis_table[N_Term::Stm][Category::OpNot] = 17;
+    analysis_table[N_Term::Stm][Category::Terminator] = 17;
+    analysis_table[N_Term::Stm][Category::CteInt] = 17;
+    analysis_table[N_Term::Stm][Category::CteString] = 17;
+    analysis_table[N_Term::Stm][Category::CteChar] = 17;
+    analysis_table[N_Term::Stm][Category::CteFloat] = 17;
+    analysis_table[N_Term::Stm][Category::CteBool] = 17;
+    analysis_table[N_Term::Stm][Category::Id] = 17;
+
+    analysis_table[N_Term::ElseStm][Category::CtrlIf] = 19;
+    analysis_table[N_Term::ElseStm][Category::CtrlElse] = 18;
+    analysis_table[N_Term::ElseStm][Category::LoopWhile] = 19;
+    analysis_table[N_Term::ElseStm][Category::LoopFor] = 19;
+    analysis_table[N_Term::ElseStm][Category::Break] = 19;
+    analysis_table[N_Term::ElseStm][Category::Return] = 19;
+    analysis_table[N_Term::ElseStm][Category::Input] = 19;
+    analysis_table[N_Term::ElseStm][Category::Output] = 19;
+    analysis_table[N_Term::ElseStm][Category::Char] = 19;
+    analysis_table[N_Term::ElseStm][Category::Integer] = 19;
+    analysis_table[N_Term::ElseStm][Category::Float] = 19;
+    analysis_table[N_Term::ElseStm][Category::String] = 19;
+    analysis_table[N_Term::ElseStm][Category::Void] = 19;
+    analysis_table[N_Term::ElseStm][Category::Boolean] = 19;
+    analysis_table[N_Term::ElseStm][Category::Parenth1] = 19;
+    analysis_table[N_Term::ElseStm][Category::Braces2] = 19;
+    analysis_table[N_Term::ElseStm][Category::OpAdd] = 19;
+    analysis_table[N_Term::ElseStm][Category::OpMinus] = 19;
+    analysis_table[N_Term::ElseStm][Category::OpNot] = 19;
+    analysis_table[N_Term::ElseStm][Category::Terminator] = 19;
+    analysis_table[N_Term::ElseStm][Category::CteInt] = 19;
+    analysis_table[N_Term::ElseStm][Category::CteString] = 19;
+    analysis_table[N_Term::ElseStm][Category::CteChar] = 19;
+    analysis_table[N_Term::ElseStm][Category::CteFloat] = 19;
+    analysis_table[N_Term::ElseStm][Category::CteBool] = 19;
+    analysis_table[N_Term::ElseStm][Category::Id] = 19;
+
+    analysis_table[N_Term::NormalStm][Category::Break] = 21;
+    analysis_table[N_Term::NormalStm][Category::Return] = 22;
+    analysis_table[N_Term::NormalStm][Category::Input] = 24;
+    analysis_table[N_Term::NormalStm][Category::Output] = 25;
+    analysis_table[N_Term::NormalStm][Category::Parenth1] = 20;
+    analysis_table[N_Term::NormalStm][Category::OpAdd] = 20;
+    analysis_table[N_Term::NormalStm][Category::OpMinus] = 20;
+    analysis_table[N_Term::NormalStm][Category::OpNot] = 20;
+    analysis_table[N_Term::NormalStm][Category::Terminator] = 23;
+    analysis_table[N_Term::NormalStm][Category::CteInt] = 20;
+    analysis_table[N_Term::NormalStm][Category::CteString] = 20;
+    analysis_table[N_Term::NormalStm][Category::CteChar] = 20;
+    analysis_table[N_Term::NormalStm][Category::CteFloat] = 20;
+    analysis_table[N_Term::NormalStm][Category::CteBool] = 20;
+    analysis_table[N_Term::NormalStm][Category::Id] = 20;
+
+    
+    analysis_table[N_Term::VarDecl][Category::Char] = 26;
+    analysis_table[N_Term::VarDecl][Category::Integer] = 26;
+    analysis_table[N_Term::VarDecl][Category::Float] = 26;
+    analysis_table[N_Term::VarDecl][Category::String] = 26;
+    analysis_table[N_Term::VarDecl][Category::Void] = 26;
+    analysis_table[N_Term::VarDecl][Category::Boolean] = 26;
+
+    
+    analysis_table[N_Term::VarList][Category::Comma] = 27;
+    analysis_table[N_Term::VarList][Category::Terminator] = 28;
+
+    analysis_table[N_Term::NInit][Category::Assign] = 29;
+    analysis_table[N_Term::NInit][Category::Comma] = 30;
+    analysis_table[N_Term::NInit][Category::Terminator] = 30;
+    
+    analysis_table[N_Term::InitAux][Category::Parenth1] = 31;
+    analysis_table[N_Term::InitAux][Category::Braces1] = 32;
+    analysis_table[N_Term::InitAux][Category::OpAdd] = 31;
+    analysis_table[N_Term::InitAux][Category::OpMinus] = 31;
+    analysis_table[N_Term::InitAux][Category::OpNot] = 31;
+    analysis_table[N_Term::InitAux][Category::CteInt] = 31;
+    analysis_table[N_Term::InitAux][Category::CteString] = 31;
+    analysis_table[N_Term::InitAux][Category::CteChar] = 31;
+    analysis_table[N_Term::InitAux][Category::CteFloat] = 31;
+    analysis_table[N_Term::InitAux][Category::CteBool] = 31;
+    analysis_table[N_Term::InitAux][Category::Id] = 31;
+
+    analysis_table[N_Term::Array][Category::Bracket1] = 33;
+    analysis_table[N_Term::Array][Category::Assign] = 34;
+    analysis_table[N_Term::Array][Category::Comma] = 34;
+    analysis_table[N_Term::Array][Category::Terminator] = 34;
+    
+    analysis_table[N_Term::ArrayAux][Category::Parenth1] = 35;
+    analysis_table[N_Term::ArrayAux][Category::Bracket2] = 36;
+    analysis_table[N_Term::ArrayAux][Category::OpAdd] = 35;
+    analysis_table[N_Term::ArrayAux][Category::OpMinus] = 35;
+    analysis_table[N_Term::ArrayAux][Category::OpNot] = 35;
+    analysis_table[N_Term::ArrayAux][Category::CteInt] = 35;
+    analysis_table[N_Term::ArrayAux][Category::CteString] = 35;
+    analysis_table[N_Term::ArrayAux][Category::CteChar] = 35;
+    analysis_table[N_Term::ArrayAux][Category::CteFloat] = 35;
+    analysis_table[N_Term::ArrayAux][Category::CteBool] = 35;
+    analysis_table[N_Term::ArrayAux][Category::Id] = 35;
+
+    analysis_table[N_Term::OpConc][Category::Parenth1] = 38;
+    analysis_table[N_Term::OpConc][Category::OpAdd] = 37;
+    analysis_table[N_Term::OpConc][Category::OpMinus] = 37;
+    analysis_table[N_Term::OpConc][Category::OpNot] = 37;
+    analysis_table[N_Term::OpConc][Category::CteInt] = 37;
+    analysis_table[N_Term::OpConc][Category::CteString] = 37;
+    analysis_table[N_Term::OpConc][Category::CteChar] = 37;
+    analysis_table[N_Term::OpConc][Category::CteFloat] = 37;
+    analysis_table[N_Term::OpConc][Category::CteBool] = 37;
+    analysis_table[N_Term::OpConc][Category::Id] = 37;
+
+    analysis_table[N_Term::OpCoAux][Category::Parenth2] = 41;
+    analysis_table[N_Term::OpCoAux][Category::Braces2] = 41;
+    analysis_table[N_Term::OpCoAux][Category::Bracket2] = 41;
+    analysis_table[N_Term::OpCoAux][Category::OpConcat] = 39;
+    analysis_table[N_Term::OpCoAux][Category::Assign] = 40;
+    analysis_table[N_Term::OpCoAux][Category::Comma] = 41;
+    analysis_table[N_Term::OpCoAux][Category::Terminator] = 41;
+
+    analysis_table[N_Term::OpCoBux][Category::Char] = 42;
+    analysis_table[N_Term::OpCoBux][Category::Integer] = 42;
+    analysis_table[N_Term::OpCoBux][Category::Float] = 42;
+    analysis_table[N_Term::OpCoBux][Category::String] = 42;
+    analysis_table[N_Term::OpCoBux][Category::Void] = 42;
+    analysis_table[N_Term::OpCoBux][Category::Boolean] = 42;
+    analysis_table[N_Term::OpCoBux][Category::Parenth1] = 44;
+    analysis_table[N_Term::OpCoBux][Category::OpAdd] = 43;
+    analysis_table[N_Term::OpCoBux][Category::OpMinus] = 43;
+    analysis_table[N_Term::OpCoBux][Category::OpNot] = 43;
+    analysis_table[N_Term::OpCoBux][Category::CteInt] = 43;
+    analysis_table[N_Term::OpCoBux][Category::CteString] = 43;
+    analysis_table[N_Term::OpCoBux][Category::CteChar] = 43;
+    analysis_table[N_Term::OpCoBux][Category::CteFloat] = 43;
+    analysis_table[N_Term::OpCoBux][Category::CteBool] = 43;
+    analysis_table[N_Term::OpCoBux][Category::Id] = 43;
+
+    analysis_table[N_Term::NOpOr][Category::OpAdd] = 45;
+    analysis_table[N_Term::NOpOr][Category::OpMinus] = 45;
+    analysis_table[N_Term::NOpOr][Category::OpNot] = 45;
+    analysis_table[N_Term::NOpOr][Category::CteInt] = 45;
+    analysis_table[N_Term::NOpOr][Category::CteString] = 45;
+    analysis_table[N_Term::NOpOr][Category::CteChar] = 45;
+    analysis_table[N_Term::NOpOr][Category::CteFloat] = 45;
+    analysis_table[N_Term::NOpOr][Category::CteBool] = 45;
+    analysis_table[N_Term::NOpOr][Category::Id] = 45;
+
+    analysis_table[N_Term::OpOrAux][Category::Parenth2] = 47;
+    analysis_table[N_Term::OpOrAux][Category::Braces2] = 47;
+    analysis_table[N_Term::OpOrAux][Category::Bracket2] = 47;
+    analysis_table[N_Term::OpOrAux][Category::OpConcat] = 47;
+    analysis_table[N_Term::OpOrAux][Category::OpOr] = 46;
+    analysis_table[N_Term::OpOrAux][Category::Assign] = 47;
+    analysis_table[N_Term::OpOrAux][Category::Comma] = 47;
+    analysis_table[N_Term::OpOrAux][Category::Terminator] = 47;
+
+    analysis_table[N_Term::OpAndXor][Category::OpAdd] = 48;
+    analysis_table[N_Term::OpAndXor][Category::OpMinus] = 48;
+    analysis_table[N_Term::OpAndXor][Category::OpNot] = 48;
+    analysis_table[N_Term::OpAndXor][Category::CteInt] = 48;
+    analysis_table[N_Term::OpAndXor][Category::CteString] = 48;
+    analysis_table[N_Term::OpAndXor][Category::CteChar] = 48;
+    analysis_table[N_Term::OpAndXor][Category::CteFloat] = 48;
+    analysis_table[N_Term::OpAndXor][Category::CteBool] = 48;
+    analysis_table[N_Term::OpAndXor][Category::Id] = 48;
+
+    analysis_table[N_Term::OpAXAux][Category::Parenth2] = 51;
+    analysis_table[N_Term::OpAXAux][Category::Braces2] = 51;
+    analysis_table[N_Term::OpAXAux][Category::Bracket2] = 51;
+    analysis_table[N_Term::OpAXAux][Category::OpConcat] = 51;
+    analysis_table[N_Term::OpAXAux][Category::OpBinXor] = 51;
+    analysis_table[N_Term::OpAXAux][Category::OpAnd] = 49;
+    analysis_table[N_Term::OpAXAux][Category::OpOr] = 51;
+    analysis_table[N_Term::OpAXAux][Category::Assign] = 51;
+    analysis_table[N_Term::OpAXAux][Category::Comma] = 51;
+    analysis_table[N_Term::OpAXAux][Category::Terminator] = 51;
+
+    analysis_table[N_Term::OpEquate][Category::OpAdd] = 52;
+    analysis_table[N_Term::OpEquate][Category::OpMinus] = 52;
+    analysis_table[N_Term::OpEquate][Category::OpNot] = 52;
+    analysis_table[N_Term::OpEquate][Category::CteInt] = 52;
+    analysis_table[N_Term::OpEquate][Category::CteString] = 52;
+    analysis_table[N_Term::OpEquate][Category::CteChar] = 52;
+    analysis_table[N_Term::OpEquate][Category::CteFloat] = 52;
+    analysis_table[N_Term::OpEquate][Category::CteBool] = 52;
+    analysis_table[N_Term::OpEquate][Category::Id] = 52;
+
+    
+    analysis_table[N_Term::OpEAux][Category::Parenth2] = 55;
+    analysis_table[N_Term::OpEAux][Category::Braces2] = 55;
+    analysis_table[N_Term::OpEAux][Category::Bracket2] = 55;
+    analysis_table[N_Term::OpEAux][Category::OpConcat] = 55;
+    analysis_table[N_Term::OpEAux][Category::OpEqual] = 53;
+    analysis_table[N_Term::OpEAux][Category::OpDiff] = 54;
+    analysis_table[N_Term::OpEAux][Category::OpBinXor] = 55;
+    analysis_table[N_Term::OpEAux][Category::OpAnd] = 55;
+    analysis_table[N_Term::OpEAux][Category::OpOr] = 55;
+    analysis_table[N_Term::OpEAux][Category::Assign] = 55;
+    analysis_table[N_Term::OpEAux][Category::Comma] = 55;
+    analysis_table[N_Term::OpEAux][Category::Terminator] = 55;
+
+    analysis_table[N_Term::OpCompare][Category::OpAdd] = 56;
+    analysis_table[N_Term::OpCompare][Category::OpMinus] = 56;
+    analysis_table[N_Term::OpCompare][Category::OpNot] = 56;
+    analysis_table[N_Term::OpCompare][Category::CteInt] = 56;
+    analysis_table[N_Term::OpCompare][Category::CteString] = 56;
+    analysis_table[N_Term::OpCompare][Category::CteChar] = 56;
+    analysis_table[N_Term::OpCompare][Category::CteFloat] = 56;
+    analysis_table[N_Term::OpCompare][Category::CteBool] = 56;
+    analysis_table[N_Term::OpCompare][Category::Id] = 56;
+
+    analysis_table[N_Term::OpCAux][Category::Parenth2] = 61;
+    analysis_table[N_Term::OpCAux][Category::Braces2] = 61;
+    analysis_table[N_Term::OpCAux][Category::Bracket2] = 61;
+    analysis_table[N_Term::OpCAux][Category::OpConcat] = 61;
+    analysis_table[N_Term::OpCAux][Category::OpLesser] = 57;
+    analysis_table[N_Term::OpCAux][Category::OpGreater] = 58;
+    analysis_table[N_Term::OpCAux][Category::OpLEqual] = 59;
+    analysis_table[N_Term::OpCAux][Category::OpGEqual] = 60;
+    analysis_table[N_Term::OpCAux][Category::OpEqual] = 61;
+    analysis_table[N_Term::OpCAux][Category::OpDiff] = 61;
+    analysis_table[N_Term::OpCAux][Category::OpBinXor] = 61;
+    analysis_table[N_Term::OpCAux][Category::OpAnd] = 61;
+    analysis_table[N_Term::OpCAux][Category::OpOr] = 61;
+    analysis_table[N_Term::OpCAux][Category::Assign] = 61;
+    analysis_table[N_Term::OpCAux][Category::Comma] = 61;
+    analysis_table[N_Term::OpCAux][Category::Terminator] = 61;
+
+    analysis_table[N_Term::NOpAdd][Category::OpAdd] = 62;
+    analysis_table[N_Term::NOpAdd][Category::OpMinus] = 62;
+    analysis_table[N_Term::NOpAdd][Category::OpNot] = 62;
+    analysis_table[N_Term::NOpAdd][Category::CteInt] = 62;
+    analysis_table[N_Term::NOpAdd][Category::CteString] = 62;
+    analysis_table[N_Term::NOpAdd][Category::CteChar] = 62;
+    analysis_table[N_Term::NOpAdd][Category::CteFloat] = 62;
+    analysis_table[N_Term::NOpAdd][Category::CteBool] = 62;
+    analysis_table[N_Term::NOpAdd][Category::Id] = 62;
+
+    analysis_table[N_Term::OpAddAux][Category::Parenth2] = 65;
+    analysis_table[N_Term::OpAddAux][Category::Braces2] = 65;
+    analysis_table[N_Term::OpAddAux][Category::Bracket2] = 65;
+    analysis_table[N_Term::OpAddAux][Category::OpAdd] = 63;
+    analysis_table[N_Term::OpAddAux][Category::OpMinus] = 64;
+    analysis_table[N_Term::OpAddAux][Category::OpConcat] = 65;
+    analysis_table[N_Term::OpAddAux][Category::OpLesser] = 65;
+    analysis_table[N_Term::OpAddAux][Category::OpGreater] = 65;
+    analysis_table[N_Term::OpAddAux][Category::OpLEqual] = 65;
+    analysis_table[N_Term::OpAddAux][Category::OpGEqual] = 65;
+    analysis_table[N_Term::OpAddAux][Category::OpEqual] = 65;
+    analysis_table[N_Term::OpAddAux][Category::OpDiff] = 65;
+    analysis_table[N_Term::OpAddAux][Category::OpBinXor] = 65;
+    analysis_table[N_Term::OpAddAux][Category::OpAnd] = 65;
+    analysis_table[N_Term::OpAddAux][Category::OpOr] = 65;
+    analysis_table[N_Term::OpAddAux][Category::Assign] = 65;
+    analysis_table[N_Term::OpAddAux][Category::Comma] = 65;
+    analysis_table[N_Term::OpAddAux][Category::Terminator] = 65;
+
+    analysis_table[N_Term::NOpMult][Category::OpAdd] = 66;
+    analysis_table[N_Term::NOpMult][Category::OpMinus] = 66;
+    analysis_table[N_Term::NOpMult][Category::OpNot] = 66;
+    analysis_table[N_Term::NOpMult][Category::CteInt] = 66;
+    analysis_table[N_Term::NOpMult][Category::CteString] = 66;
+    analysis_table[N_Term::NOpMult][Category::CteChar] = 66;
+    analysis_table[N_Term::NOpMult][Category::CteFloat] = 66;
+    analysis_table[N_Term::NOpMult][Category::CteBool] = 66;
+    analysis_table[N_Term::NOpMult][Category::Id] = 66;
+    
+    analysis_table[N_Term::OpMAux][Category::Parenth2] = 70;
+    analysis_table[N_Term::OpMAux][Category::Braces2] = 70;
+    analysis_table[N_Term::OpMAux][Category::Bracket2] = 70;
+    analysis_table[N_Term::OpMAux][Category::OpAdd] = 70;
+    analysis_table[N_Term::OpMAux][Category::OpMinus] = 70;
+    analysis_table[N_Term::OpMAux][Category::OpMult] = 67;
+    analysis_table[N_Term::OpMAux][Category::OpDiv] = 68;
+    analysis_table[N_Term::OpMAux][Category::OpRem] = 69;
+    analysis_table[N_Term::OpMAux][Category::OpConcat] = 70;
+    analysis_table[N_Term::OpMAux][Category::OpLesser] = 70;
+    analysis_table[N_Term::OpMAux][Category::OpGreater] = 70;
+    analysis_table[N_Term::OpMAux][Category::OpLEqual] = 70;
+    analysis_table[N_Term::OpMAux][Category::OpGEqual] = 70;
+    analysis_table[N_Term::OpMAux][Category::OpEqual] = 70;
+    analysis_table[N_Term::OpMAux][Category::OpDiff] = 70;
+    analysis_table[N_Term::OpMAux][Category::OpBinXor] = 70;
+    analysis_table[N_Term::OpMAux][Category::OpAnd] = 70;
+    analysis_table[N_Term::OpMAux][Category::OpOr] = 70;
+    analysis_table[N_Term::OpMAux][Category::Assign] = 70;
+    analysis_table[N_Term::OpMAux][Category::Comma] = 70;
+    analysis_table[N_Term::OpMAux][Category::Terminator] = 70;
+
+    analysis_table[N_Term::OpUnary][Category::OpAdd] = 73;
+    analysis_table[N_Term::OpUnary][Category::OpMinus] = 72;
+    analysis_table[N_Term::OpUnary][Category::OpNot] = 71;
+    analysis_table[N_Term::OpUnary][Category::CteInt] = 74;
+    analysis_table[N_Term::OpUnary][Category::CteString] = 74;
+    analysis_table[N_Term::OpUnary][Category::CteChar] = 74;
+    analysis_table[N_Term::OpUnary][Category::CteFloat] = 74;
+    analysis_table[N_Term::OpUnary][Category::CteBool] = 74;
+    analysis_table[N_Term::OpUnary][Category::Id] = 74;
+
+    analysis_table[N_Term::Value][Category::CteInt] = 75;
+    analysis_table[N_Term::Value][Category::CteString] = 76;
+    analysis_table[N_Term::Value][Category::CteChar] = 77;
+    analysis_table[N_Term::Value][Category::CteFloat] = 78;
+    analysis_table[N_Term::Value][Category::CteBool] = 79;
+    analysis_table[N_Term::Value][Category::Id] = 80;
+
+    analysis_table[N_Term::ValueAux][Category::Parenth1] = 81;
+    analysis_table[N_Term::ValueAux][Category::Parenth2] = 82;
+    analysis_table[N_Term::ValueAux][Category::Braces2] = 82;
+    analysis_table[N_Term::ValueAux][Category::Bracket2] = 82;
+    analysis_table[N_Term::ValueAux][Category::OpAdd] = 82;
+    analysis_table[N_Term::ValueAux][Category::OpMinus] = 82;
+    analysis_table[N_Term::ValueAux][Category::OpMult] = 82;
+    analysis_table[N_Term::ValueAux][Category::OpDiv] = 82;
+    analysis_table[N_Term::ValueAux][Category::OpRem] = 82;
+    analysis_table[N_Term::ValueAux][Category::OpConcat] = 82;
+    analysis_table[N_Term::ValueAux][Category::OpLesser] = 82;
+    analysis_table[N_Term::ValueAux][Category::OpGreater] = 82;
+    analysis_table[N_Term::ValueAux][Category::OpLEqual] = 82;
+    analysis_table[N_Term::ValueAux][Category::OpGEqual] = 82;
+    analysis_table[N_Term::ValueAux][Category::OpEqual] = 82;
+    analysis_table[N_Term::ValueAux][Category::OpDiff] = 82;
+    analysis_table[N_Term::ValueAux][Category::OpBinXor] = 82;
+    analysis_table[N_Term::ValueAux][Category::OpAnd] = 82;
+    analysis_table[N_Term::ValueAux][Category::OpOr] = 82;
+    analysis_table[N_Term::ValueAux][Category::Assign] = 82;
+    analysis_table[N_Term::ValueAux][Category::Comma] = 82;
+    analysis_table[N_Term::ValueAux][Category::Terminator] = 82;
+
+    analysis_table[N_Term::ParamList][Category::Parenth2] = 84;
+    analysis_table[N_Term::ParamList][Category::Id] = 83;
+
+    analysis_table[N_Term::ParamLAux][Category::Parenth2] = 86;
+    analysis_table[N_Term::ParamLAux][Category::Comma] = 85;
+
+    analysis_table[N_Term::OpCList][Category::Braces2] = 88;
+    analysis_table[N_Term::OpCList][Category::Comma] = 87;
+
+    analysis_table[N_Term::Type][Category::Char] = 89;
+    analysis_table[N_Term::Type][Category::Integer] = 90;
+    analysis_table[N_Term::Type][Category::Float] = 91;
+    analysis_table[N_Term::Type][Category::String] = 92;
+    analysis_table[N_Term::Type][Category::Void] = 93;
+    analysis_table[N_Term::Type][Category::Boolean] = 94;
+}
+
 bool SyntaticAnalyzer::Parse() {
 
-    Production* p = productions[9];
+    Production* p = productions[25];
     print_prod(p);
     return true;
 }
@@ -459,8 +879,112 @@ std::string SyntaticAnalyzer::get_readable(N_Term t) {
             return "OpCList";
         case N_Term::Type:
             return "Type";
+        case N_Term::Empty:
+            return "épsilon";
         default:
             return "";
+    }
+}
+
+std::string SyntaticAnalyzer::get_cat_readable(Category c) {
+    switch(c) {
+
+        case Category::CtrlIf :
+            return "'if'";
+        case Category::CtrlElse:
+            return "'else'";
+        case Category::LoopWhile:
+            return "'while'";
+        case Category::LoopFor:
+            return "'for'";
+        case Category::Break:
+            return "'break'";
+        case Category::Return:
+            return "'return'";
+        case Category::Input:
+            return "'input'";
+        case Category::Output:
+            return "'output'";
+        case Category::Integer:
+            return "'intr'";
+        case Category::Float:
+            return "'float'";
+        case Category::Char:
+            return "'char'";
+        case Category::Void:
+            return "'void'";
+        case Category::String:
+            return "'string'";
+        case Category::Boolean:
+            return "'bool'";
+        case Category::Parenth1:
+            return "'('";
+        case Category::Parenth2:
+            return "')'";
+        case Category::Braces1:
+            return "'{'";
+        case Category::Braces2:
+            return "'}'";
+        case Category::Bracket1:
+            return "'['";
+        case Category::Bracket2:
+            return "']'";
+        case Category::OpAdd:
+            return "'+'";
+        case Category::OpMinus:
+            return "'-'";
+        case Category::OpDiv:
+            return "'/'";
+        case Category::OpMult:
+            return "'*'";
+        case Category::OpRem:
+            return "'%'";
+        case Category::OpConcat:
+            return "'++'";
+        case Category::OpGreater:
+            return "'>'";
+        case Category::OpLesser:
+            return "'<'";
+        case Category::OpGEqual:
+            return "'>='";
+        case Category::OpLEqual:
+            return "'<='";
+        case Category::OpDiff:
+            return "'!='";
+        case Category::OpEqual:
+            return "'==";
+        case Category::OpBinXor:
+            return "'^'";
+        case Category::OpNot:
+            return "'!'";
+        case Category::OpAnd:
+            return "'and'";
+        case Category::OpOr:
+            return "'or'";
+        case Category::Assign:
+            return "'='";
+        case Category::Comma:
+            return "','";
+        case Category::Terminator:
+            return "';'";
+        case Category::Error:
+            return "'Error'";
+        case Category::Id:
+            return "'Id'";
+        case Category::CteInt:
+            return "'CteInt'";
+        case Category::CteFloat:
+            return "'CteFloat'";
+        case Category::CteString:
+            return "'CteString'";
+        case Category::CteChar:
+            return "'CteChar'";
+        case Category::CteBool:
+            return "'CteBool'";
+        case Category::Eof:
+            return "'Eof'";
+        default:
+            return"'Erro'";
     }
 }
 
