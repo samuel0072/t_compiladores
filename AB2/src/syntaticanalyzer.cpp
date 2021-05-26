@@ -944,6 +944,8 @@ std::string SyntaticAnalyzer::get_readable(N_Term t) {
             return "OpConc";
         case N_Term::OpCoAux:
             return "OpCoAux";
+        case N_Term::OpCoBux:
+            return "OpCoBux";
         case N_Term::NOpOr:
             return "OpOr";
         case N_Term::OpAndXor:
@@ -984,6 +986,8 @@ std::string SyntaticAnalyzer::get_readable(N_Term t) {
             return "Type";
         case N_Term::Empty:
             return "épsilon";
+        case N_Term::OutputList:
+            return "OutputList";
         default:
             return "";
     }
