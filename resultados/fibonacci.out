@@ -104,11 +104,11 @@
    6          output("%d", d);
           StmList = Stm StmList 
           Stm = NormalStm 
-          NormalStm = 'output' '(' 'CteString'  ')' ';' 
+          NormalStm = 'output' '(' 'CteString' OutputList ')' ';' 
               [0006, 0009] (0007,               Output) {output}
               [0006, 0015] (0014,             Parenth1) {(}
               [0006, 0016] (0044,            CteString) {"%d"}
-           = ',' ParamList 
+          OutputList = ',' ParamList 
               [0006, 0020] (0037,                Comma) {,}
           ParamList = 'Id' ParamLAux 
               [0006, 0022] (0040,                   Id) {d}
@@ -284,11 +284,11 @@
   13              output(", %d", aux);
           StmList = Stm StmList 
           Stm = NormalStm 
-          NormalStm = 'output' '(' 'CteString'  ')' ';' 
+          NormalStm = 'output' '(' 'CteString' OutputList ')' ';' 
               [0013, 0013] (0007,               Output) {output}
               [0013, 0019] (0014,             Parenth1) {(}
               [0013, 0020] (0044,            CteString) {", %d"}
-           = ',' ParamList 
+          OutputList = ',' ParamList 
               [0013, 0026] (0037,                Comma) {,}
           ParamList = 'Id' ParamLAux 
               [0013, 0028] (0040,                   Id) {aux}
@@ -463,11 +463,11 @@
   24      output("Digite um valor limite: ");
           StmList = Stm StmList 
           Stm = NormalStm 
-          NormalStm = 'output' '(' 'CteString'  ')' ';' 
+          NormalStm = 'output' '(' 'CteString' OutputList ')' ';' 
               [0024, 0005] (0007,               Output) {output}
               [0024, 0011] (0014,             Parenth1) {(}
               [0024, 0012] (0044,            CteString) {"Digite um valor limite: "}
-           = épsilon 
+          OutputList = épsilon 
               [0024, 0038] (0015,             Parenth2) {)}
               [0024, 0039] (0038,           Terminator) {;}
   25      input(limite);

@@ -43,11 +43,11 @@
    3      output("%s", a);
           StmList = Stm StmList 
           Stm = NormalStm 
-          NormalStm = 'output' '(' 'CteString'  ')' ';' 
+          NormalStm = 'output' '(' 'CteString' OutputList ')' ';' 
               [0003, 0005] (0007,               Output) {output}
               [0003, 0011] (0014,             Parenth1) {(}
               [0003, 0012] (0044,            CteString) {"%s"}
-           = ',' ParamList 
+          OutputList = ',' ParamList 
               [0003, 0016] (0037,                Comma) {,}
           ParamList = 'Id' ParamLAux 
               [0003, 0018] (0040,                   Id) {a}

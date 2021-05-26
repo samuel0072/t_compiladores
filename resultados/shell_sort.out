@@ -993,11 +993,11 @@
   40          output("%d ", b);
           StmList = Stm StmList 
           Stm = NormalStm 
-          NormalStm = 'output' '(' 'CteString'  ')' ';' 
+          NormalStm = 'output' '(' 'CteString' OutputList ')' ';' 
               [0040, 0009] (0007,               Output) {output}
               [0040, 0015] (0014,             Parenth1) {(}
               [0040, 0016] (0044,            CteString) {"%d "}
-           = ',' ParamList 
+          OutputList = ',' ParamList 
               [0040, 0021] (0037,                Comma) {,}
           ParamList = 'Id' ParamLAux 
               [0040, 0023] (0040,                   Id) {b}
@@ -1118,11 +1118,11 @@
   47          output("%d ", b);
           StmList = Stm StmList 
           Stm = NormalStm 
-          NormalStm = 'output' '(' 'CteString'  ')' ';' 
+          NormalStm = 'output' '(' 'CteString' OutputList ')' ';' 
               [0047, 0009] (0007,               Output) {output}
               [0047, 0015] (0014,             Parenth1) {(}
               [0047, 0016] (0044,            CteString) {"%d "}
-           = ',' ParamList 
+          OutputList = ',' ParamList 
               [0047, 0021] (0037,                Comma) {,}
           ParamList = 'Id' ParamLAux 
               [0047, 0023] (0040,                   Id) {b}
