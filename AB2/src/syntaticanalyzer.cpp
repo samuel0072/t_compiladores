@@ -433,8 +433,9 @@ void SyntaticAnalyzer::init_table() {
 
     analysis_table[N_Term::DeclBux][Category::Parenth1] = 6;
     analysis_table[N_Term::DeclBux][Category::Bracket1] = 5;
-    analysis_table[N_Term::DeclBux][Category::Assign] = 6;
-    analysis_table[N_Term::DeclBux][Category::Comma] = 6;
+    analysis_table[N_Term::DeclBux][Category::Assign] = 5;
+    analysis_table[N_Term::DeclBux][Category::Comma] = 5;
+    analysis_table[N_Term::DeclBux][Category::Terminator] = 5;
     
     analysis_table[N_Term::ParamDef][Category::Char] = 7;
     analysis_table[N_Term::ParamDef][Category::Integer] = 7;
@@ -886,6 +887,7 @@ bool SyntaticAnalyzer::Parse() {
                 printf("              [%04d, %04d] (%04d, %20s) ",
                 tk->line, tk->col, tk->cat, lexical->get_cat_name(tk->cat));
                 std::cout << "{" + tk->lex + "}\n";
+                print_stack();
                 return false;
             }
             Production* p = productions[index];
